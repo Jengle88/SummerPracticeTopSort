@@ -32,6 +32,7 @@ kotlin {
                 implementation(compose.uiTooling)
                 implementation(compose.runtime)
                 implementation(compose.preview)
+                implementation(compose.materialIconsExtended)
             }
         }
         val jvmTest by getting
