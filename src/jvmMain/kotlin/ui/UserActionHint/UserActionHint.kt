@@ -19,10 +19,11 @@ fun UserActionHint(
     modifier: Modifier = Modifier
 ) {
     val title = remember { mutableStateOf("") }
-    val userActionHintViewModel = UserActionHintViewModel(title, editorStateFlow)
+    val userActionHintViewModel = UserActionHintViewModel()
+    userActionHintViewModel.subscribeTitleToEditorState(title, editorStateFlow)
 
     Text(
-        text = userActionHintViewModel.getTitle(editorStateFlow.value),
+        text = title.value,
         modifier = modifier,
         style = TextStyle(
             color = Color.Gray

@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import data.repositoryImpl.MockGraphDataStorageInteractor
 import data.utils.EditorState
 import kotlinx.coroutines.flow.MutableStateFlow
 import ui.GraphEditor.GraphCanvas.GraphCanvas
@@ -31,7 +30,9 @@ fun GraphEditor(
         Box(
             Modifier.border(2.dp, Color.LightGray)
         ) {
-            GraphCanvas(Modifier
+            GraphCanvas(
+                editorStateFlow = editorStateFlow,
+                modifier = Modifier
                 .align(Alignment.TopStart)
                 .size(800.dp, 700.dp)
                 .background(

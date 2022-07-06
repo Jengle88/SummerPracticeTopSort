@@ -43,23 +43,6 @@ fun MainScreen() {
 }
 @Composable
 fun MainContent() {
-//
-//    val a = MutableStateFlow(1)
-//    val text = remember { mutableStateOf("") }
-//    a.onEach { data ->
-//        text.value = data.toString()
-//    }.launchIn(CoroutineScope(Dispatchers.Main))
-//
-//    Button(
-//        onClick = {
-//            a.value++
-//        }
-//    ) {
-//        Text(
-//            text = text.value
-//        )
-//    }
-
     val mainScreenViewModel = MainScreenViewModel()
     Column {
         UserActionHint(

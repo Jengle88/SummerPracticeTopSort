@@ -5,21 +5,22 @@ import data.utils.EditorState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class UserActionHintViewModel(
-    title: MutableState<String>,
-    editorStateFlow: MutableStateFlow<EditorState>
 ) {
-    fun getTitle(editorState: EditorState) = when(editorState) {
-            else -> ""
+    private fun getTitle(editorState: EditorState) = "Пояснение: " + when(editorState) {
+            EditorState.WAITING -> "режим ожидания"
+            EditorState.SET_VERTEX -> "добавление вершины"
+            EditorState.REMOVE_VERTEX -> "удаление вершины"
+            EditorState.SET_EDGE_FIRST -> "выбор вершины, откуда будет выходить ребро"
+            EditorState.SET_EDGE_SECOND -> "выбор вершины, куда будет входить ребро"
+            EditorState.REMOVE_EDGE -> "удаление ребра"
         }
-    init {
-        CoroutineScope(Dispatchers.Main).launch {
-            editorStateFlow.collect { data ->
-                title.value = getTitle(data)
-            }
-        }
-
+    fun subscribeTitleToEditorState(title: MutableState<String>, editorStateFlow: MutableStateFlow<EditorState>) {
+        editorStateFlow.onEach { state ->
+            title.value = getTitle(state)
+        }.launchIn(CoroutineScope(Dispatchers.Main))
     }
 }

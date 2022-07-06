@@ -62,7 +62,9 @@ fun EditGraphElements(
         IconButton(
             modifier = buttonModifier
                 .size(64.dp),
-            onClick = {}
+            onClick = {
+                graphToolsViewModel.addVertexTap()
+            }
         ) {
             Image(
                 painter = painterResource("drawable/add_vertex.ico"),
@@ -72,7 +74,9 @@ fun EditGraphElements(
         IconButton(
             modifier = buttonModifier
                 .size(64.dp),
-            onClick = {}
+            onClick = {
+                graphToolsViewModel.removeVertexTap()
+            }
         ) {
             Image(
                 painter = painterResource("drawable/remove_vertex.ico"),
@@ -87,7 +91,9 @@ fun EditGraphElements(
         IconButton(
             modifier = buttonModifier
                 .size(64.dp),
-            onClick = {}
+            onClick = {
+                graphToolsViewModel.addEdgeTap()
+            }
         ) {
             Image(
                 painter = painterResource("drawable/add_edge.ico"),
@@ -97,7 +103,9 @@ fun EditGraphElements(
         IconButton(
             modifier = buttonModifier
                 .size(64.dp),
-            onClick = {}
+            onClick = {
+                graphToolsViewModel.removeEdgeTap()
+            }
         ) {
             Image(
                 painter = painterResource("drawable/remove_edge.ico"),

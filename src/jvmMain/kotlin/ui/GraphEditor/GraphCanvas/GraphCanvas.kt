@@ -1,54 +1,29 @@
 package ui.GraphEditor.GraphCanvas
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import data.repositoryImpl.MockGraphDataStorageInteractor
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
-import org.jetbrains.skia.Font
-
+import data.utils.EditorState
+import kotlinx.coroutines.flow.MutableStateFlow
 
 
 @Composable
 @Preview
-fun GraphCanvas(modifier: Modifier = Modifier) {
+fun GraphCanvas(
+    modifier: Modifier = Modifier,
+    editorStateFlow: MutableStateFlow<EditorState>
+) {
 
-
-
-
-
-
-    /*
-    val graphDataFlow = graphCanvasViewModel.getGraphData()
-    val graphData = remember { mutableStateOf(ArrayList<VertexVO>()) }
-    graphDataFlow.onEach { data ->
-        graphData.value = data
-    }
-
-    Button(onClick = {
-        graphCanvasViewModel.updateGraph()
-        CoroutineScope(Dispatchers.Main).launch {
-            graphDataFlow.collectLatest { data ->
-                graphData.value = data
-            }
-        }
-
-
-    }) {
-        Text("Жмяк")
-    }*/
-
-    /*Canvas(
+    Canvas(
         modifier = modifier
     ) {
+        // TODO: 06.07.2022 Добавить обработку данных в interactor
+        val graphCanvasViewModel = GraphCanvasViewModel(
+            editorStateFlow,
+            this
+        )
+
 
         /*
         val circle1x = 150f
@@ -177,6 +152,6 @@ fun GraphCanvas(modifier: Modifier = Modifier) {
             ),
             strokeWidth = 2f
         )*/
-    }*/
+    }
 }
 

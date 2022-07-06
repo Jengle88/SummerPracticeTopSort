@@ -1,32 +1,35 @@
 package ui.GraphEditor.GraphCanvas
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.toArgb
+import data.utils.EditorState
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
 import models.interactor.GraphEditorInteractor
 import org.jetbrains.skia.Canvas
 import org.jetbrains.skia.Font
 import org.jetbrains.skia.Point
 
+enum class GraphCanvasItem {
+    VERTEX,
+    EDGE
+}
 
-class GraphCanvasViewModel(private val graphEditorInteractor: GraphEditorInteractor) {
-    private var graphData: Flow<ArrayList<VertexVO>> = flow {
-//        emit(graphEditorInteractor.getGraph())
-        // TODO: 06.07.2022 Дописать про загрузку
-    }
-//    private var graphData: Flow<ArrayList<VertexVO>> = flow {
-//        emit(graphCanvasInteractor.getGraph())
-//    }
-//
-//
-//    fun getGraphData() = graphData
-//    fun updateGraph() {
-//        graphCanvasInteractor.addVertex("vertex", Point(1f, 5f))
-//    }
-
+// TODO: 06.07.2022 Добавить interactor
+class GraphCanvasViewModel(
+    private val editorStateFlow: MutableStateFlow<EditorState>,
+    private val drawScope: DrawScope
+) {
+    private val graphVertex = ArrayList<VertexVO>()
+    private val graphEdges = ArrayList<Pair<String, String>>()
     fun selectPoint(point: Point) {
-        // TODO: 06.07.2022 Передача информации наверх и ожидание действия
+        when(editorStateFlow.value) {
+            EditorState.SET_VERTEX -> {
+                // TODO: 06.07.2022 Дописать рисование
+            }
+        }
     }
 
     fun drawVertex(center: Point) {
