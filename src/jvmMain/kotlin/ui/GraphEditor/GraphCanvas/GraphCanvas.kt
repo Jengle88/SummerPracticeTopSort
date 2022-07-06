@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import data.utils.EditorState
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.jetbrains.skia.Point
 
 
 @Composable
@@ -23,6 +24,8 @@ fun GraphCanvas(
             editorStateFlow,
             this
         )
+//        graphCanvasViewModel.selectPoint(Point(80f, 80f))
+
 
 
         /*

@@ -1,16 +1,18 @@
 package ui.GraphEditor.GraphCanvas
 
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import data.utils.EditorState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
 import models.interactor.GraphEditorInteractor
-import org.jetbrains.skia.Canvas
-import org.jetbrains.skia.Font
-import org.jetbrains.skia.Point
+import org.jetbrains.skia.*
 
 enum class GraphCanvasItem {
     VERTEX,
@@ -24,27 +26,51 @@ class GraphCanvasViewModel(
 ) {
     private val graphVertex = ArrayList<VertexVO>()
     private val graphEdges = ArrayList<Pair<String, String>>()
+    private val font = Font().apply {
+        size = 15f
+    }
     fun selectPoint(point: Point) {
         when(editorStateFlow.value) {
             EditorState.SET_VERTEX -> {
-                // TODO: 06.07.2022 Дописать рисование
+                // TODO: 06.07.2022 Получение названия вершины...
+                val nameMock = "vertex${graphVertex.size+1}"
+                val vertex = VertexVO(name = nameMock, center = point)
+                graphVertex.add(vertex)
+                drawVertex(vertex)
             }
         }
     }
 
-    fun drawVertex(center: Point) {
-        // TODO: 06.07.2022 Рисование вершины
+    private fun drawVertex(vertex: VertexVO) {
+        drawScope.drawCircle(
+            color = vertex.color,
+            radius = VertexVO.radius,
+            center = Offset(vertex.center.x, vertex.center.y),
+            style = Stroke()
+        )
+        val offset = getTextOffset(font, vertex.name)
+        drawScope.drawIntoCanvas {
+            it.nativeCanvas.drawString(
+                s = vertex.name,
+                x = vertex.center.x - offset,
+                y = vertex.center.y + 5f,
+                paint = Paint().apply {
+                    this.color = Color.Black.toArgb()
+                },
+                font = font
+            )
+        }
     }
 
-    fun drawEdge(point1: Point, point2: Point) {
+    private fun drawEdge(point1: Point, point2: Point) {
         // TODO: 06.07.2022 Рисование ребра
     }
 
-    fun clearCanvas(canvas: Canvas, defaultColor: Color) {
+    private fun clearCanvas(canvas: Canvas, defaultColor: Color) {
         canvas.clear(defaultColor.toArgb())
     }
 
-    fun getTextOffset(
+    private fun getTextOffset(
         font: Font,
         textLabel: String
     ): Int {
