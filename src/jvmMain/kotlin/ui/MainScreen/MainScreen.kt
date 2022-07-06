@@ -4,16 +4,27 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.singleWindowApplication
-import ui.GraphTools.GraphTools
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.subscribe
+import ui.GraphEditor.GraphEditor
 import ui.InformationTables.InformationTables
+import ui.MainScreen.MainScreenViewModel
 import ui.TopBarElement.MainScreenTopBar
 import ui.UserActionHint.UserActionHint
 
@@ -32,15 +43,37 @@ fun MainScreen() {
 }
 @Composable
 fun MainContent() {
+//
+//    val a = MutableStateFlow(1)
+//    val text = remember { mutableStateOf("") }
+//    a.onEach { data ->
+//        text.value = data.toString()
+//    }.launchIn(CoroutineScope(Dispatchers.Main))
+//
+//    Button(
+//        onClick = {
+//            a.value++
+//        }
+//    ) {
+//        Text(
+//            text = text.value
+//        )
+//    }
+
+    val mainScreenViewModel = MainScreenViewModel()
     Column {
-        UserActionHint(Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
+        UserActionHint(
+            editorStateFlow = mainScreenViewModel.editorState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         )
-        GraphTools(Modifier
-            .fillMaxWidth()
-            .defaultMinSize(minHeight = 450.dp, minWidth = (800+250).dp)
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+        GraphEditor(
+            editorStateFlow = mainScreenViewModel.editorState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .defaultMinSize(minHeight = 450.dp, minWidth = (800+250).dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
         )
         InformationTables(Modifier
             .fillMaxWidth()

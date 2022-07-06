@@ -1,4 +1,4 @@
-package ui.GraphTools.GraphEditor
+package ui.GraphEditor.GraphTools
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
@@ -17,10 +17,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import data.utils.EditorState
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 @Preview
-fun GraphEditor(modifier: Modifier = Modifier) {
+fun GraphTools(
+    editorStateFlow: MutableStateFlow<EditorState>,
+    modifier: Modifier = Modifier
+) {
+    val graphToolsViewModel = GraphToolsViewModel(editorStateFlow)
     Column(
         modifier = modifier
     ) {
@@ -30,16 +36,17 @@ fun GraphEditor(modifier: Modifier = Modifier) {
         val rowButtonsModifier = Modifier
             .fillMaxWidth()
 
-        EditGraphElements(rowButtonsModifier, buttonModifier)
-        AlgorithmPanel(rowButtonsModifier, buttonModifier)
-        AlgorithmButtons()
+        EditGraphElements(rowButtonsModifier, buttonModifier, graphToolsViewModel)
+        AlgorithmPanel(rowButtonsModifier, buttonModifier, graphToolsViewModel)
+        AlgorithmButtons(graphToolsViewModel)
     }
 }
 
 @Composable
 fun EditGraphElements(
     rowButtonsModifier: Modifier,
-    buttonModifier: Modifier
+    buttonModifier: Modifier,
+    graphToolsViewModel: GraphToolsViewModel
 ) {
     Text(
         modifier = Modifier
@@ -102,7 +109,8 @@ fun EditGraphElements(
 @Composable
 fun AlgorithmPanel(
     rowButtonsModifier: Modifier,
-    buttonModifier: Modifier
+    buttonModifier: Modifier,
+    graphToolsViewModel: GraphToolsViewModel
 ) {
     Text(
         modifier = Modifier
@@ -157,7 +165,7 @@ fun AlgorithmPanel(
 }
 
 @Composable
-fun AlgorithmButtons() {
+fun AlgorithmButtons(graphToolsViewModel: GraphToolsViewModel) {
     Text(
         modifier = Modifier
             .fillMaxWidth()

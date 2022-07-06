@@ -1,4 +1,4 @@
-package ui.GraphTools
+package ui.GraphEditor
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
@@ -12,12 +12,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import ui.GraphTools.GraphCanvas.GraphCanvas
-import ui.GraphTools.GraphEditor.GraphEditor
+import data.repositoryImpl.MockGraphDataStorageInteractor
+import data.utils.EditorState
+import kotlinx.coroutines.flow.MutableStateFlow
+import ui.GraphEditor.GraphCanvas.GraphCanvas
+import ui.GraphEditor.GraphTools.GraphTools
 
 @Composable
 @Preview
-fun GraphTools(modifier: Modifier = Modifier) {
+fun GraphEditor(
+    editorStateFlow: MutableStateFlow<EditorState>,
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = modifier
     ) {
@@ -34,7 +40,9 @@ fun GraphTools(modifier: Modifier = Modifier) {
             )
         }
 
-        GraphEditor(Modifier
+        GraphTools(
+            editorStateFlow = editorStateFlow,
+            modifier = Modifier
             .align(Alignment.TopEnd)
             .width(graphEditorWidth)
             .padding(start = 16.dp)

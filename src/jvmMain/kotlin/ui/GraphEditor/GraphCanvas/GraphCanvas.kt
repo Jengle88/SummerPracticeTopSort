@@ -1,23 +1,56 @@
-package ui.GraphTools.GraphCanvas
+package ui.GraphEditor.GraphCanvas
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.Canvas
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.toArgb
+import data.repositoryImpl.MockGraphDataStorageInteractor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.jetbrains.skia.Font
-import org.jetbrains.skia.Paint
+
+
 
 @Composable
 @Preview
 fun GraphCanvas(modifier: Modifier = Modifier) {
-    Canvas(
+
+
+
+
+
+
+    /*
+    val graphDataFlow = graphCanvasViewModel.getGraphData()
+    val graphData = remember { mutableStateOf(ArrayList<VertexVO>()) }
+    graphDataFlow.onEach { data ->
+        graphData.value = data
+    }
+
+    Button(onClick = {
+        graphCanvasViewModel.updateGraph()
+        CoroutineScope(Dispatchers.Main).launch {
+            graphDataFlow.collectLatest { data ->
+                graphData.value = data
+            }
+        }
+
+
+    }) {
+        Text("Жмяк")
+    }*/
+
+    /*Canvas(
         modifier = modifier
     ) {
+
+        /*
         val circle1x = 150f
         val circle1y = 150f
         val circle1radius = 50f
@@ -143,21 +176,7 @@ fun GraphCanvas(modifier: Modifier = Modifier) {
                 y = circle2y
             ),
             strokeWidth = 2f
-        )
-    }
+        )*/
+    }*/
 }
 
-private fun getTextOffset(
-    font: Font,
-    textLabel: String
-): Int {
-    val textWidth = font.getWidths(font.getStringGlyphs(textLabel))
-    var textOffset = 0
-    for (i in 0 until textWidth.size / 2) {
-        textOffset += textWidth[i].toInt()
-    }
-    if (textWidth.size % 2 == 1) {
-        textOffset += textWidth[textWidth.size / 2].toInt() / 2
-    }
-    return textOffset
-}
