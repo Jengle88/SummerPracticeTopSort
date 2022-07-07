@@ -16,7 +16,8 @@ class UserActionHintViewModel(
             EditorState.REMOVE_VERTEX -> "удаление вершины"
             EditorState.SET_EDGE_FIRST -> "выбор вершины, откуда будет выходить ребро"
             EditorState.SET_EDGE_SECOND -> "выбор вершины, куда будет входить ребро"
-            EditorState.REMOVE_EDGE -> "удаление ребра"
+            EditorState.REMOVE_EDGE_FIRST -> "удаление ребра, выбор первой вершины"
+            EditorState.REMOVE_EDGE_SECOND -> "удаление ребра, выбор второй вершины"
         }
     fun subscribeTitleToEditorState(title: MutableState<String>, editorStateFlow: MutableStateFlow<EditorState>) {
         editorStateFlow.onEach { state ->

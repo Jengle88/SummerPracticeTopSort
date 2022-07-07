@@ -11,10 +11,7 @@ class VertexMock(
 ) {
     fun getName(): String = name
 
-    fun removeEdge(edge: String) {
-        edges.remove(edge)
-    }
-
+    fun removeEdge(edge: String) = edges.remove(edge)
     fun addEdge(edge: String) {
         edges.add(edge)
     }

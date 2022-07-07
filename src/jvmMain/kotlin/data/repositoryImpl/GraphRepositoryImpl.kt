@@ -2,10 +2,8 @@ package data.repositoryImpl
 
 import data.mock.VertexMock
 import data.mock.graph
-import models.mapper.toVertexVO
 import models.repository.GraphRepository
 import org.jetbrains.skia.Point
-import ui.GraphEditor.GraphCanvas.VertexVO
 
 class GraphRepositoryImpl: GraphRepository {
     override fun getGraph(): ArrayList<VertexMock> = graph
@@ -28,6 +26,12 @@ class GraphRepositoryImpl: GraphRepository {
 
     override fun linkVertexes(vertexName1: String, vertexName2: String) {
         graph.find { it.getName() == vertexName1 }?.addEdge(vertexName2)
+    }
+
+    override fun removeLink(vertexName1: String, vertexName2: String) {
+        if (graph.find { it.getName() == vertexName1 }
+                ?.removeEdge(vertexName2) != true)
+            graph.find { it.getName() == vertexName2 }?.removeEdge(vertexName1)
     }
 
     override fun setOrder(vertexName: String, order: Int) {

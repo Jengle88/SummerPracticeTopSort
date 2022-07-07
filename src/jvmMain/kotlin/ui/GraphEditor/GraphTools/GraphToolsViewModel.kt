@@ -17,7 +17,7 @@ class GraphToolsViewModel(private val editorStateFlow: MutableStateFlow<EditorSt
     }
 
     fun removeEdgeTap() {
-        editorStateFlow.value = EditorState.REMOVE_EDGE
+        editorStateFlow.value = EditorState.REMOVE_EDGE_FIRST
     }
 
 
