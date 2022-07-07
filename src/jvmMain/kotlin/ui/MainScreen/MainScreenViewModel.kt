@@ -1,6 +1,6 @@
 package ui.MainScreen
 
-import data.utils.EditorState
+import utils.EditorState
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class MainScreenViewModel {

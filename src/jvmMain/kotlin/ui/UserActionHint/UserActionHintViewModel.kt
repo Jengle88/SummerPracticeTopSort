@@ -1,7 +1,7 @@
 package ui.UserActionHint
 
 import androidx.compose.runtime.MutableState
-import data.utils.EditorState
+import utils.EditorState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

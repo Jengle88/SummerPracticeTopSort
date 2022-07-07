@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import data.utils.EditorState
+import utils.EditorState
 import kotlinx.coroutines.flow.MutableStateFlow
 import ui.GraphEditor.GraphCanvas.GraphCanvas
 import ui.GraphEditor.GraphTools.GraphTools

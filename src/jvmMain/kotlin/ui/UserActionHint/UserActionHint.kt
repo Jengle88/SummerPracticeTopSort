@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import data.utils.EditorState
+import utils.EditorState
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable

@@ -1,6 +1,6 @@
 package ui.GraphEditor.GraphTools
 
-import data.utils.EditorState
+import utils.EditorState
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class GraphToolsViewModel(private val editorStateFlow: MutableStateFlow<EditorState>) {

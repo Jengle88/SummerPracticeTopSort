@@ -1,4 +1,4 @@
-package data.utils
+package utils
 
 enum class EditorState {
     WAITING,
