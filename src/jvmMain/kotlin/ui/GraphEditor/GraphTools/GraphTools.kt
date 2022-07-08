@@ -35,10 +35,11 @@ fun GraphTools(
             .align(Alignment.CenterHorizontally)
         val rowButtonsModifier = Modifier
             .fillMaxWidth()
+            .padding(start = 16.dp, end = 8.dp)
 
         EditGraphElements(rowButtonsModifier, buttonModifier, graphToolsViewModel)
         AlgorithmPanel(rowButtonsModifier, buttonModifier, graphToolsViewModel)
-        AlgorithmButtons(graphToolsViewModel)
+        AlgorithmButtons(rowButtonsModifier, graphToolsViewModel)
     }
 }
 
@@ -173,7 +174,10 @@ fun AlgorithmPanel(
 }
 
 @Composable
-fun AlgorithmButtons(graphToolsViewModel: GraphToolsViewModel) {
+fun AlgorithmButtons(
+    rowButtonsModifier: Modifier,
+    graphToolsViewModel: GraphToolsViewModel
+) {
     Text(
         modifier = Modifier
             .fillMaxWidth()
@@ -182,15 +186,18 @@ fun AlgorithmButtons(graphToolsViewModel: GraphToolsViewModel) {
         textAlign = TextAlign.Center,
         fontWeight = FontWeight.Bold
     )
-
-    Button(
-        modifier = Modifier
-            .fillMaxWidth(),
-        onClick = {}
+    Row(
+        modifier = rowButtonsModifier
     ) {
-        Text(
-            text = "Топологическая сортировка",
-            textAlign = TextAlign.Center
-        )
+        Button(
+            modifier = Modifier
+                .fillMaxWidth(),
+            onClick = {}
+        ) {
+            Text(
+                text = "Топологическая сортировка",
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
