@@ -1,8 +1,12 @@
 package ui.GraphEditor.GraphCanvas
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Canvas
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import models.interactor.GraphEditorInteractor
 import org.jetbrains.skia.Font
 import org.jetbrains.skia.Point
@@ -10,7 +14,6 @@ import utils.CanvasDrawLib
 import utils.EditorState
 import utils.getDistTo
 
-// TODO: 06.07.2022 Добавить interactor
 class GraphCanvasViewModel(
     private val editorStateFlow: MutableStateFlow<EditorState>,
     private val graphEditorInteractor: GraphEditorInteractor,
@@ -20,6 +23,7 @@ class GraphCanvasViewModel(
         size = 15f
     }
     private var firstVertexForEdge: VertexVO? = null
+    val vertexNameFlow = MutableStateFlow("")
     fun drawGraph(canvas: Canvas, value: List<VertexVO>) {
         val mapVertex: MutableMap<String, Point> = mutableMapOf()
         for (vertex in value) {
@@ -35,6 +39,7 @@ class GraphCanvasViewModel(
     }
 
     fun selectPoint(
+        addVertexAlertDialogState: MutableState<Boolean>,
         point: Point,
         height: Int,
         width: Int
@@ -42,6 +47,7 @@ class GraphCanvasViewModel(
             when(editorStateFlow.value) {
                 EditorState.SET_VERTEX -> {
                     firstVertexForEdge = null
+                    addVertexAlertDialogState.value = true
                     addVertexToCanvas(point, height, width)
                 }
                 EditorState.REMOVE_VERTEX -> {
@@ -114,16 +120,21 @@ class GraphCanvasViewModel(
         height: Int,
         width: Int
     ) {
-        if (checkVertexPosition(point, height, width)) {
-
-            // TODO: 06.07.2022 Получение названия вершины...
-            val nameMock = "vertex${graphVertex.size + 1}"
-            val vertex = VertexVO(name = nameMock, center = point)
-            graphVertex.add(vertex)
-            graphEditorInteractor.addVertex(
-                vertex.name,
-                vertex.center
-            )
+        CoroutineScope(Dispatchers.Main).launch {
+            vertexNameFlow.collect {
+                if (it != "") {
+                    if (checkVertexPosition(point, height, width)) {
+                        val nameMock = it
+                        vertexNameFlow.value = ""
+                        val vertex = VertexVO(name = nameMock, center = point)
+                        graphVertex.add(vertex)
+                        graphEditorInteractor.addVertex(
+                            vertex.name,
+                            vertex.center
+                        )
+                    }
+                }
+            }
         }
     }
 

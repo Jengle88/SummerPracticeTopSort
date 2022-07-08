@@ -11,6 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -26,7 +28,7 @@ fun GraphTools(
     editorStateFlow: MutableStateFlow<EditorState>,
     modifier: Modifier = Modifier
 ) {
-    val graphToolsViewModel = GraphToolsViewModel(editorStateFlow)
+    val graphToolsViewModel = remember { mutableStateOf(GraphToolsViewModel(editorStateFlow)) }
     Column(
         modifier = modifier
     ) {
@@ -36,10 +38,9 @@ fun GraphTools(
         val rowButtonsModifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 8.dp)
-
-        EditGraphElements(rowButtonsModifier, buttonModifier, graphToolsViewModel)
-        AlgorithmPanel(rowButtonsModifier, buttonModifier, graphToolsViewModel)
-        AlgorithmButtons(rowButtonsModifier, graphToolsViewModel)
+        EditGraphElements(rowButtonsModifier, buttonModifier, graphToolsViewModel.value)
+        AlgorithmPanel(rowButtonsModifier, buttonModifier, graphToolsViewModel.value)
+        AlgorithmButtons(rowButtonsModifier, graphToolsViewModel.value)
     }
 }
 

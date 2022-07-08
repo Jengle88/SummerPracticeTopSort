@@ -1,12 +1,11 @@
 package ui.UserActionHint
 
 import androidx.compose.runtime.MutableState
-import utils.EditorState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import utils.EditorState
 
 class UserActionHintViewModel(
 ) {
@@ -20,8 +19,11 @@ class UserActionHintViewModel(
             EditorState.REMOVE_EDGE_SECOND -> "удаление ребра, выбор второй вершины"
         }
     fun subscribeTitleToEditorState(title: MutableState<String>, editorStateFlow: MutableStateFlow<EditorState>) {
-        editorStateFlow.onEach { state ->
-            title.value = getTitle(state)
-        }.launchIn(CoroutineScope(Dispatchers.Main))
+        CoroutineScope(Dispatchers.Main).launch {
+            editorStateFlow.collect { state ->
+                title.value = getTitle(state)
+            }
+        }
+
     }
 }

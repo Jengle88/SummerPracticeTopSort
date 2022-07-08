@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -30,16 +32,16 @@ fun MainScreen() {
 }
 @Composable
 fun MainContent() {
-    val mainScreenViewModel = MainScreenViewModel()
+    val mainScreenViewModel = remember { mutableStateOf(MainScreenViewModel()) }
     Column {
         UserActionHint(
-            editorStateFlow = mainScreenViewModel.editorState,
+            editorStateFlow = mainScreenViewModel.value.editorState,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
         )
         GraphEditor(
-            editorStateFlow = mainScreenViewModel.editorState,
+            editorStateFlow = mainScreenViewModel.value.editorState,
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.75f)
