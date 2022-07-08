@@ -4,6 +4,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose")
+    java
 }
 
 group = "ru.etu"
@@ -48,5 +49,23 @@ compose.desktop {
             packageName = "SummerPracticeTopSort"
             packageVersion = "1.0.0"
         }
+    }
+}
+
+/**
+ * build: ./gradlew buildFullJar
+ * run jar: (из папки SummerPracticeTopSort/build/libs) java -jar SummerPracticeTopSort-1.0-SNAPSHOT-all.jar
+ * run: ./gradlew run
+ */
+tasks {
+    register<Jar>("buildFullJar") {
+        group = "jarBuild"
+        archiveClassifier.set("all")
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        manifest {
+            attributes["Main-Class"] = "MainScreenKt"
+        }
+        from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+        from(sourceSets.main.get().output)
     }
 }
