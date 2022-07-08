@@ -33,6 +33,7 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.preview)
                 implementation(compose.materialIconsExtended)
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
             }
         }
         val jvmTest by getting

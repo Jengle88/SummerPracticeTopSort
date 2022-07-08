@@ -1,4 +1,4 @@
-package ui.GraphTools.GraphEditor
+package ui.GraphEditor.GraphTools
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
@@ -11,16 +11,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import utils.EditorState
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 @Preview
-fun GraphEditor(modifier: Modifier = Modifier) {
+fun GraphTools(
+    editorStateFlow: MutableStateFlow<EditorState>,
+    modifier: Modifier = Modifier
+) {
+    val graphToolsViewModel = remember { mutableStateOf(GraphToolsViewModel(editorStateFlow)) }
     Column(
         modifier = modifier
     ) {
@@ -29,17 +37,18 @@ fun GraphEditor(modifier: Modifier = Modifier) {
             .align(Alignment.CenterHorizontally)
         val rowButtonsModifier = Modifier
             .fillMaxWidth()
-
-        EditGraphElements(rowButtonsModifier, buttonModifier)
-        AlgorithmPanel(rowButtonsModifier, buttonModifier)
-        AlgorithmButtons()
+            .padding(start = 16.dp, end = 8.dp)
+        EditGraphElements(rowButtonsModifier, buttonModifier, graphToolsViewModel.value)
+        AlgorithmPanel(rowButtonsModifier, buttonModifier, graphToolsViewModel.value)
+        AlgorithmButtons(rowButtonsModifier, graphToolsViewModel.value)
     }
 }
 
 @Composable
 fun EditGraphElements(
     rowButtonsModifier: Modifier,
-    buttonModifier: Modifier
+    buttonModifier: Modifier,
+    graphToolsViewModel: GraphToolsViewModel
 ) {
     Text(
         modifier = Modifier
@@ -55,7 +64,9 @@ fun EditGraphElements(
         IconButton(
             modifier = buttonModifier
                 .size(64.dp),
-            onClick = {}
+            onClick = {
+                graphToolsViewModel.addVertexTap()
+            }
         ) {
             Image(
                 painter = painterResource("drawable/add_vertex.ico"),
@@ -65,7 +76,9 @@ fun EditGraphElements(
         IconButton(
             modifier = buttonModifier
                 .size(64.dp),
-            onClick = {}
+            onClick = {
+                graphToolsViewModel.removeVertexTap()
+            }
         ) {
             Image(
                 painter = painterResource("drawable/remove_vertex.ico"),
@@ -80,7 +93,9 @@ fun EditGraphElements(
         IconButton(
             modifier = buttonModifier
                 .size(64.dp),
-            onClick = {}
+            onClick = {
+                graphToolsViewModel.addEdgeTap()
+            }
         ) {
             Image(
                 painter = painterResource("drawable/add_edge.ico"),
@@ -90,7 +105,9 @@ fun EditGraphElements(
         IconButton(
             modifier = buttonModifier
                 .size(64.dp),
-            onClick = {}
+            onClick = {
+                graphToolsViewModel.removeEdgeTap()
+            }
         ) {
             Image(
                 painter = painterResource("drawable/remove_edge.ico"),
@@ -102,7 +119,8 @@ fun EditGraphElements(
 @Composable
 fun AlgorithmPanel(
     rowButtonsModifier: Modifier,
-    buttonModifier: Modifier
+    buttonModifier: Modifier,
+    graphToolsViewModel: GraphToolsViewModel
 ) {
     Text(
         modifier = Modifier
@@ -157,7 +175,10 @@ fun AlgorithmPanel(
 }
 
 @Composable
-fun AlgorithmButtons() {
+fun AlgorithmButtons(
+    rowButtonsModifier: Modifier,
+    graphToolsViewModel: GraphToolsViewModel
+) {
     Text(
         modifier = Modifier
             .fillMaxWidth()
@@ -166,15 +187,18 @@ fun AlgorithmButtons() {
         textAlign = TextAlign.Center,
         fontWeight = FontWeight.Bold
     )
-
-    Button(
-        modifier = Modifier
-            .fillMaxWidth(),
-        onClick = {}
+    Row(
+        modifier = rowButtonsModifier
     ) {
-        Text(
-            text = "Топологическая сортировка",
-            textAlign = TextAlign.Center
-        )
+        Button(
+            modifier = Modifier
+                .fillMaxWidth(),
+            onClick = {}
+        ) {
+            Text(
+                text = "Топологическая сортировка",
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
