@@ -33,7 +33,7 @@ object GraphAlgorithm {
         val visited: ArrayList<Vertex> = arrayListOf()
         for (vertex in vertexes) {
             if (vertex !in visited) {
-                result = TopSortUtil(graph, vertex, visited, 0)
+                result += TopSortUtil(graph, vertex, visited, 0)
             }
         }
         return result
