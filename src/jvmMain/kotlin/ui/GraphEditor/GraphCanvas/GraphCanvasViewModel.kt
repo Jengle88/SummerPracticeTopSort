@@ -26,6 +26,18 @@ class GraphCanvasViewModel(
     private var firstVertexForEdge: VertexVO? = null
     val vertexNameFlow = MutableStateFlow("")
     private lateinit var lastPoint: Point
+
+    init {
+        CoroutineScope(Dispatchers.Main).launch {
+            graphEditorInteractor.getGraph().collect { graph ->
+                graphVertex.clear()
+                graphVertex.addAll(graph.getVertexes().map { it.toVertexVO() })
+                firstVertexForEdge = null
+            }
+
+        }
+    }
+
     fun drawGraph(canvas: Canvas, value: List<VertexVO>) {
         val mapVertex: MutableMap<Long, Point> = mutableMapOf()
         for (vertex in value) {
@@ -33,7 +45,7 @@ class GraphCanvasViewModel(
             mapVertex[vertex.id] = vertex.center
         }
         for (vertex in value) {
-            val listOfEdges = graphEditorInteractor.getGraph().getVertex(vertex.id)?.getEdges()
+            val listOfEdges = graphEditorInteractor.getGraph().value.getVertex(vertex.id)?.getEdges()
             for (otherVertexId in listOfEdges ?: ArrayList()) {
                 CanvasDrawLib.drawEdge(canvas, mapVertex[vertex.id], mapVertex[otherVertexId])
             }
@@ -153,7 +165,7 @@ class GraphCanvasViewModel(
         }
         if (removedVertex == null)
             return
-        for (vertex in graphEditorInteractor.getGraph().getVertexes()) {
+        for (vertex in graphEditorInteractor.getGraph().value.getVertexes()) {
             vertex.getEdges().removeAll { it == removedVertex.id }
         }
         graphEditorInteractor.removeVertex(removedVertex.id)

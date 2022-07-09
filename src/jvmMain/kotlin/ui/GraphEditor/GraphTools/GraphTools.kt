@@ -34,7 +34,7 @@ fun GraphTools(
     modifier: Modifier = Modifier
 ) {
     val graphToolsViewModel = remember { mutableStateOf(GraphToolsViewModel(
-        AlgorithmInteractorImpl(DataGraphLocator.graph),
+        AlgorithmInteractorImpl(DataGraphLocator.graphFlow),
         editorStateFlow,
         currentAlgorithm
     )) }

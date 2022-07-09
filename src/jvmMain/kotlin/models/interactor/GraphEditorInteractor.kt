@@ -2,11 +2,12 @@ package models.interactor
 
 import data.`object`.Graph
 import data.`object`.Vertex
-import models.repository.GraphRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import models.repository.GraphEditorRepository
 import org.jetbrains.skia.Point
 
 interface GraphEditorInteractor {
-    fun getGraph(): Graph
+    fun getGraph(): MutableStateFlow<Graph>
     fun addVertex(vertexName: String, center: Point): Vertex
     fun removeVertex(vertexId: Long)
     fun linkVertexes(vertexId1: Long, vertexId2: Long)
@@ -14,16 +15,16 @@ interface GraphEditorInteractor {
     fun setOrder(vertexId: Long, order: Int)
 }
 
-class GraphEditorInteractorImpl(private val graphRepository: GraphRepository): GraphEditorInteractor {
-    override fun getGraph(): Graph = graphRepository.getGraph()
+class GraphEditorInteractorImpl(private val graphEditorRepository: GraphEditorRepository): GraphEditorInteractor {
+    override fun getGraph(): MutableStateFlow<Graph> = graphEditorRepository.getGraph()
 
-    override fun addVertex(vertexName: String, center: Point) = graphRepository.addVertex(vertexName, center)
+    override fun addVertex(vertexName: String, center: Point) = graphEditorRepository.addVertex(vertexName, center)
 
-    override fun removeVertex(vertexId: Long) = graphRepository.removeVertex(vertexId)
+    override fun removeVertex(vertexId: Long) = graphEditorRepository.removeVertex(vertexId)
 
-    override fun linkVertexes(vertexId1: Long, vertexId2: Long) = graphRepository.linkVertexes(vertexId1, vertexId2)
+    override fun linkVertexes(vertexId1: Long, vertexId2: Long) = graphEditorRepository.linkVertexes(vertexId1, vertexId2)
 
-    override fun removeLink(vertexId1: Long, vertexId2: Long) = graphRepository.removeLink(vertexId1, vertexId2)
+    override fun removeLink(vertexId1: Long, vertexId2: Long) = graphEditorRepository.removeLink(vertexId1, vertexId2)
 
-    override fun setOrder(vertexId: Long, order: Int) = graphRepository.setOrder(vertexId, order)
+    override fun setOrder(vertexId: Long, order: Int) = graphEditorRepository.setOrder(vertexId, order)
 }
