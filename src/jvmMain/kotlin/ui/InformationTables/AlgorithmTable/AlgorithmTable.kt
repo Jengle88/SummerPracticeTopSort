@@ -8,20 +8,42 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import data.graphData.DataGraphLocator
+import kotlinx.coroutines.flow.MutableStateFlow
+import models.interactor.AlgorithmTableInteractorImpl
 import ui.InformationTables.TableItem
+import utils.algorithm.Algorithm
+import utils.EditorState
+import utils.algorithm.AlgorithmState
 
 @Composable
 @Preview
-fun AlgorithmTable(modifier: Modifier = Modifier) {
+fun AlgorithmTable(
+    editorStateFlow: MutableStateFlow<EditorState>,
+    currentAlgorithm: MutableStateFlow<Pair<Algorithm, AlgorithmState>>,
+    modifier: Modifier = Modifier
+) {
     val lazyColumnState = rememberLazyListState(
         initialFirstVisibleItemIndex = 0
     )
+    val mapOfResult = remember { mutableStateOf(mapOf<String, String>()) }
+    val algorithmTableViewModel = remember {
+        mutableStateOf(
+            AlgorithmTableViewModel(
+                AlgorithmTableInteractorImpl(DataGraphLocator.graph),
+                currentAlgorithm,
+                mapOfResult
+            )
+        )
+    }
     val numberCardWeight = 40f
     val resultCardWeight = 100f
 
@@ -57,11 +79,12 @@ fun AlgorithmTable(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .padding(end = 12.dp)
             ) {
-                for (i in 1..30) {
+                algorithmTableViewModel.value.fillTable()
+                for ((vertex, result) in mapOfResult.value) {
                     item {
                         TableItem(
-                            "n: $i",
-                            "result: ${i+5}",
+                            vertex,
+                            result,
                             numberCardWeight,
                             resultCardWeight
                         )

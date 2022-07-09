@@ -42,16 +42,20 @@ fun MainContent() {
         )
         GraphEditor(
             editorStateFlow = mainScreenViewModel.value.editorState,
+            currentAlgorithm = mainScreenViewModel.value.currentAlgorithm,
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.75f)
                 .padding(vertical = 8.dp)
                 .padding(start = 8.dp)
         )
-        InformationTables(Modifier
-            .fillMaxWidth()
-            .defaultMinSize(minHeight = 50.dp, minWidth = 150.dp)
-            .padding(8.dp)
+        InformationTables(
+            editorStateFlow = mainScreenViewModel.value.editorState,
+            currentAlgorithm = mainScreenViewModel.value.currentAlgorithm,
+            modifier = Modifier
+                .fillMaxWidth()
+                .defaultMinSize(minHeight = 50.dp, minWidth = 150.dp)
+                .padding(8.dp)
         )
     }
 }

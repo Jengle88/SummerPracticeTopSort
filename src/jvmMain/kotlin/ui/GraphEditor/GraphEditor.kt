@@ -14,12 +14,15 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableStateFlow
 import ui.GraphEditor.GraphCanvas.GraphCanvas
 import ui.GraphEditor.GraphTools.GraphTools
+import utils.algorithm.Algorithm
 import utils.EditorState
+import utils.algorithm.AlgorithmState
 
 @Composable
 @Preview
 fun GraphEditor(
     editorStateFlow: MutableStateFlow<EditorState>,
+    currentAlgorithm: MutableStateFlow<Pair<Algorithm, AlgorithmState>>,
     modifier: Modifier = Modifier
 ) {
     BoxWithConstraints(
@@ -41,6 +44,7 @@ fun GraphEditor(
         )
         GraphTools(
             editorStateFlow = editorStateFlow,
+            currentAlgorithm = currentAlgorithm,
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .width(graphEditorWidth)
