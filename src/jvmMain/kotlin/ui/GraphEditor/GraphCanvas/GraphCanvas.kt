@@ -6,7 +6,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import data.repositoryImpl.MockGraphDataStorageInteractor
+import data.repositoryImpl.GraphDataStorageInteractor
 import kotlinx.coroutines.flow.MutableStateFlow
 import ui.GraphEditor.AddVertexAlertDialog
 import utils.EditorState
@@ -23,7 +23,7 @@ fun GraphCanvas(
     val graphCanvasViewModel = remember {
         GraphCanvasViewModel(
             editorStateFlow,
-            MockGraphDataStorageInteractor,
+            GraphDataStorageInteractor,
             graph
         )
     }

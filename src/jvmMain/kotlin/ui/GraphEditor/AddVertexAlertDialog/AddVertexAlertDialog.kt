@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableStateFlow
 import ui.GraphEditor.AddVertexAlertDialog.AddVertexAlertDialogViewModel.ConfirmButton
 import ui.GraphEditor.AddVertexAlertDialog.AddVertexAlertDialogViewModel.DismissButton
+import ui.GraphEditor.AddVertexAlertDialog.AddVertexAlertDialogViewModel.dismissRequest
 import ui.GraphEditor.AddVertexAlertDialog.AddVertexAlertDialogViewModel.TextFieldForName
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -27,13 +28,13 @@ fun AddVertexAlertDialog(
             modifier = Modifier
                 .sizeIn(maxWidth = 325.dp, maxHeight = 250.dp),
             onDismissRequest = {
-                openDialog.value = false
+                dismissRequest(openDialog, vertexName)
             },
             confirmButton = {
                 ConfirmButton(openDialog, vertexName, name)
             },
             dismissButton = {
-                DismissButton(openDialog)
+                DismissButton(openDialog, vertexName)
             },
             title = {
                 Text("Введите название вершины")
@@ -45,3 +46,4 @@ fun AddVertexAlertDialog(
     }
     return openDialog
 }
+

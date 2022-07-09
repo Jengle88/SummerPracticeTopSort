@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import models.interactor.GraphEditorInteractor
+import models.mapper.toVertexVO
 import org.jetbrains.skia.Font
 import org.jetbrains.skia.Point
 import utils.CanvasDrawLib
@@ -24,16 +25,17 @@ class GraphCanvasViewModel(
     }
     private var firstVertexForEdge: VertexVO? = null
     val vertexNameFlow = MutableStateFlow("")
+    private lateinit var lastPoint: Point
     fun drawGraph(canvas: Canvas, value: List<VertexVO>) {
-        val mapVertex: MutableMap<String, Point> = mutableMapOf()
+        val mapVertex: MutableMap<Long, Point> = mutableMapOf()
         for (vertex in value) {
             CanvasDrawLib.drawVertex(canvas, vertex, font)
-            mapVertex[vertex.name] = vertex.center
+            mapVertex[vertex.id] = vertex.center
         }
         for (vertex in value) {
-            val listOfEdges = graphEditorInteractor.getGraph().find { it.getName() == vertex.name }
-            for (otherVertex in listOfEdges?.getEdges() ?: ArrayList()) {
-                CanvasDrawLib.drawEdge(canvas, mapVertex[vertex.name], mapVertex[otherVertex])
+            val listOfEdges = graphEditorInteractor.getGraph().getVertex(vertex.id)?.getEdges()
+            for (otherVertexId in listOfEdges ?: ArrayList()) {
+                CanvasDrawLib.drawEdge(canvas, mapVertex[vertex.id], mapVertex[otherVertexId])
             }
         }
     }
@@ -44,30 +46,32 @@ class GraphCanvasViewModel(
         height: Int,
         width: Int
     ) {
-            when(editorStateFlow.value) {
-                EditorState.SET_VERTEX -> {
-                    firstVertexForEdge = null
-                    addVertexAlertDialogState.value = true
-                    addVertexToCanvas(point, height, width)
-                }
-                EditorState.REMOVE_VERTEX -> {
-                    firstVertexForEdge = null
-                    removeVertexFromCanvas(point)
-                }
-                EditorState.SET_EDGE_FIRST -> {
-                    setFirstEdgePointAdd(point)
-                }
-                EditorState.SET_EDGE_SECOND -> {
-                    setSecondEdgePointForAdd(point)
-                }
-                EditorState.REMOVE_EDGE_FIRST -> {
-                    setFirstEdgePointForRemove(point)
-                }
-                EditorState.REMOVE_EDGE_SECOND -> {
-                    setSecondEdgePointForRemove(point)
-                }
-                else -> {}
+        rememberPoint(point)
+        when (editorStateFlow.value) {
+            EditorState.SET_VERTEX -> {
+                firstVertexForEdge = null
+                addVertexAlertDialogState.value = true
+                addVertexToCanvas(lastPoint, height, width)
+            }
+            EditorState.REMOVE_VERTEX -> {
+                firstVertexForEdge = null
+                removeVertexFromCanvas(lastPoint)
+            }
+            EditorState.SET_EDGE_FIRST -> {
+                setFirstEdgePointAdd(lastPoint)
+            }
+            EditorState.SET_EDGE_SECOND -> {
+                setSecondEdgePointForAdd(lastPoint)
+            }
+            EditorState.REMOVE_EDGE_FIRST -> {
+                setFirstEdgePointForRemove(lastPoint)
+            }
+            EditorState.REMOVE_EDGE_SECOND -> {
+                setSecondEdgePointForRemove(lastPoint)
+            }
+            else -> {}
         }
+
     }
 
 
@@ -83,8 +87,8 @@ class GraphCanvasViewModel(
             graphVertex.find { it.center.getDistTo(point) <= VertexVO.radius }
         if (firstVertexForEdge != null && secondVertex != null) {
             graphEditorInteractor.linkVertexes(
-                firstVertexForEdge!!.name,
-                secondVertex.name
+                firstVertexForEdge!!.id,
+                secondVertex.id
             )
             editorStateFlow.value = EditorState.SET_EDGE_FIRST
             // уведомляем об изменении графа
@@ -105,8 +109,8 @@ class GraphCanvasViewModel(
             graphVertex.find { it.center.getDistTo(point) <= VertexVO.radius }
         if (firstVertexForEdge != null && secondVertex != null) {
             graphEditorInteractor.removeLink(
-                firstVertexForEdge!!.name,
-                secondVertex.name
+                firstVertexForEdge!!.id,
+                secondVertex.id
             )
             editorStateFlow.value = EditorState.REMOVE_EDGE_FIRST
             // уведомляем об изменении графа
@@ -124,14 +128,13 @@ class GraphCanvasViewModel(
             vertexNameFlow.collect {
                 if (it != "") {
                     if (checkVertexPosition(point, height, width)) {
-                        val nameMock = it
+                        val name = it
                         vertexNameFlow.value = ""
-                        val vertex = VertexVO(name = nameMock, center = point)
+                        val vertex = graphEditorInteractor.addVertex(
+                            name,
+                            point
+                        ).toVertexVO()
                         graphVertex.add(vertex)
-                        graphEditorInteractor.addVertex(
-                            vertex.name,
-                            vertex.center
-                        )
                     }
                 }
             }
@@ -140,23 +143,25 @@ class GraphCanvasViewModel(
 
     private fun removeVertexFromCanvas(point: Point) {
         var removedVertex: VertexVO? = null
-        for (vertex in graphVertex) {
+        var indexOfRemoveVertex = 0
+        for ((index, vertex) in graphVertex.withIndex()) {
             if (vertex.center.getDistTo(point) <= VertexVO.radius) {
                 removedVertex = vertex
+                indexOfRemoveVertex = index
                 break
             }
         }
         if (removedVertex == null)
             return
-        for (vertex in graphEditorInteractor.getGraph()) {
-            vertex.getEdges().removeAll { it == removedVertex.name }
+        for (vertex in graphEditorInteractor.getGraph().getVertexes()) {
+            vertex.getEdges().removeAll { it == removedVertex.id }
         }
-        graphEditorInteractor.removeVertex(removedVertex.name)
-        graphVertex.remove(removedVertex)
+        graphEditorInteractor.removeVertex(removedVertex.id)
+        graphVertex.removeAt(indexOfRemoveVertex)
     }
 
-    fun checkVertexPosition(point: Point, canvasHeight: Int, canvasWidth: Int) =
-        checkCanvasRange(point, canvasWidth, canvasHeight) &&
+    fun checkVertexPosition(point: Point?, canvasHeight: Int, canvasWidth: Int) =
+        point != null && checkCanvasRange(point, canvasWidth, canvasHeight) &&
                 checkOtherVertexPosition(point)
 
 
@@ -175,5 +180,9 @@ class GraphCanvasViewModel(
         }
         return true
 
+    }
+
+    private fun rememberPoint(point: Point) {
+        lastPoint = point
     }
 }

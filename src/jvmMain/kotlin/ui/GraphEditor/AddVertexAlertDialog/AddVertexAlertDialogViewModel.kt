@@ -21,12 +21,23 @@ object AddVertexAlertDialogViewModel {
             label = { Text("Название вершины") }
         )
     }
+    fun dismissRequest(
+        openDialog: MutableState<Boolean>,
+        vertexName: MutableStateFlow<String>
+    ) {
+        vertexName.value = ""
+        openDialog.value = false
+    }
+
 
     @Composable
-    fun DismissButton(openDialog: MutableState<Boolean>) {
+    fun DismissButton(
+        openDialog: MutableState<Boolean>,
+        vertexName: MutableStateFlow<String>
+    ) {
         Button(
             onClick = {
-                openDialog.value = false
+                dismissRequest(openDialog, vertexName)
             }
         ) {
             Text("Отменить")
