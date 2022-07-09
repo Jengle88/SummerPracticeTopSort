@@ -34,11 +34,8 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.preview)
                 implementation(compose.materialIconsExtended)
-<<<<<<< Updated upstream
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
-=======
                 implementation("com.google.code.gson:gson:2.9.0")
->>>>>>> Stashed changes
             }
         }
         val jvmTest by getting
