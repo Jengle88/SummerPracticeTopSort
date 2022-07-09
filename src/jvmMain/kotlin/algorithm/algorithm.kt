@@ -1,45 +1,46 @@
 package algorithm
 
-import data.dataGraph.*
-import java.util.Collections
+import data.`object`.Graph
+import data.`object`.Vertex
+import java.util.*
+import kotlin.collections.ArrayList
 
 object GraphAlgorithm {
 
-    private fun initEdges(graph: Graph, current: Vertex): MutableMap<Int, Vertex> {
+    private fun initEdges(graph: Graph, current: Vertex): MutableMap<Long, Vertex> {
         val vertexes = graph.getVertexes()
-        val edges: MutableMap<Int, Vertex> = mutableMapOf()
+        val edges: MutableMap<Long, Vertex> = mutableMapOf()
         for (vertex in vertexes) {
-            if (vertex.getId() in current.getEdges()) edges[vertex.getId()] = vertex
+            if (vertex.getId() in current.getEdges())
+                edges[vertex.getId()] = vertex
         }
         return edges
     }
 
-    private fun TopSortUtil(graph: Graph, current: Vertex, visited: ArrayList<Vertex>, order: Int):
-            MutableMap <Vertex, Int> {
+    private fun TopSortUtil(graph: Graph, current: Vertex, visited: ArrayList<Vertex>, stackOfVertex: Stack<Vertex>) {
         visited.add(current)
-        val edges: MutableMap<Int, Vertex> = initEdges(graph, current)
-        val result: MutableMap<Vertex, Int> = mutableMapOf()
-        var newOrder = order + 1
+        val edges: MutableMap<Long, Vertex> = initEdges(graph, current)
         for (edge in edges.values) {
             if (edge !in visited) {
-                result += this.TopSortUtil(graph, edge, visited, newOrder)
-                newOrder = result.values.last() + 1
+                this.TopSortUtil(graph, edge, visited, stackOfVertex)
             }
         }
-        result[current] = order
-        return result
+        stackOfVertex.add(current)
     }
 
     fun TopSort(graph: Graph): Map<Vertex, Int> {
-        val result: MutableMap<Vertex, Int> = mutableMapOf()
+        val stackOfVertex: Stack<Vertex> = Stack()
         val vertexes = graph.getVertexes()
         val visited: ArrayList<Vertex> = arrayListOf()
-        var order: Int = 0
         for (vertex in vertexes) {
             if (vertex !in visited) {
-                result += TopSortUtil(graph, vertex, visited, order)
-                order = Collections.max(result.values) + 1
+                TopSortUtil(graph, vertex, visited, stackOfVertex)
             }
+        }
+        var order = 0
+        val result: MutableMap<Vertex, Int> = mutableMapOf()
+        while (stackOfVertex.isNotEmpty()) {
+            result[stackOfVertex.pop()] = order++
         }
         return result
     }
