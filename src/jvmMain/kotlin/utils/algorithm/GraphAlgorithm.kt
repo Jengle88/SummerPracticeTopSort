@@ -1,4 +1,4 @@
-package algorithm
+package utils.algorithm
 
 import data.`object`.Graph
 import data.`object`.Vertex
@@ -17,30 +17,30 @@ object GraphAlgorithm {
         return edges
     }
 
-    private fun TopSortUtil(graph: Graph, current: Vertex, visited: ArrayList<Vertex>, stackOfVertex: Stack<Vertex>) {
+    private fun TopSortUtil(graph: Graph, current: Vertex, visited: ArrayList<Vertex>, stackOfVertexes: Stack<Vertex>) {
         visited.add(current)
         val edges: MutableMap<Long, Vertex> = initEdges(graph, current)
         for (edge in edges.values) {
             if (edge !in visited) {
-                this.TopSortUtil(graph, edge, visited, stackOfVertex)
+                this.TopSortUtil(graph, edge, visited, stackOfVertexes)
             }
         }
-        stackOfVertex.add(current)
+        stackOfVertexes.add(current)
     }
 
     fun TopSort(graph: Graph): Map<Vertex, Int> {
-        val stackOfVertex: Stack<Vertex> = Stack()
+        val stackOfVertexes: Stack<Vertex> = Stack()
         val vertexes = graph.getVertexes()
         val visited: ArrayList<Vertex> = arrayListOf()
         for (vertex in vertexes) {
             if (vertex !in visited) {
-                TopSortUtil(graph, vertex, visited, stackOfVertex)
+                TopSortUtil(graph, vertex, visited, stackOfVertexes)
             }
         }
         var order = 0
         val result: MutableMap<Vertex, Int> = mutableMapOf()
-        while (stackOfVertex.isNotEmpty()) {
-            result[stackOfVertex.pop()] = order++
+        while (stackOfVertexes.isNotEmpty()) {
+            result[stackOfVertexes.pop()] = order++
         }
         return result
     }

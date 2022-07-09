@@ -6,7 +6,7 @@ data class Vertex(
     private var id: Long,
     private var name: String,
     private val center: Point,
-    var order: Int = 0,
+    var order: Int = -1,
     private var edges: ArrayList<Long> = ArrayList()
 ){
     fun getName() = name

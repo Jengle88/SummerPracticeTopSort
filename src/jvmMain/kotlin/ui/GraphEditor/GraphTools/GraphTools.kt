@@ -19,16 +19,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import data.graphData.DataGraphLocator
 import utils.EditorState
 import kotlinx.coroutines.flow.MutableStateFlow
+import models.interactor.AlgorithmInteractorImpl
+import utils.algorithm.Algorithm
+import utils.algorithm.AlgorithmState
 
 @Composable
 @Preview
 fun GraphTools(
     editorStateFlow: MutableStateFlow<EditorState>,
+    currentAlgorithm: MutableStateFlow<Pair<Algorithm, AlgorithmState>>,
     modifier: Modifier = Modifier
 ) {
-    val graphToolsViewModel = remember { mutableStateOf(GraphToolsViewModel(editorStateFlow)) }
+    val graphToolsViewModel = remember { mutableStateOf(GraphToolsViewModel(
+        AlgorithmInteractorImpl(DataGraphLocator.graph),
+        editorStateFlow,
+        currentAlgorithm
+    )) }
     Column(
         modifier = modifier
     ) {
@@ -137,7 +146,9 @@ fun AlgorithmPanel(
     ) {
         Button(
             modifier = buttonModifier,
-            onClick = {}
+            onClick = {
+                graphToolsViewModel.pauseTap()
+            }
         ) {
             Icon(
                 imageVector = Icons.Default.Pause,
@@ -146,7 +157,9 @@ fun AlgorithmPanel(
         }
         Button(
             modifier = buttonModifier,
-            onClick = {}
+            onClick = {
+                graphToolsViewModel.continueTap()
+            }
         ) {
             Icon(
                 imageVector = Icons.Default.PlayArrow,
@@ -161,13 +174,17 @@ fun AlgorithmPanel(
     ) {
         Button(
             modifier = buttonModifier,
-            onClick = {}
+            onClick = {
+                graphToolsViewModel.stepBackTap()
+            }
         ) {
             Text("<- Шаг")
         }
         Button(
             modifier = buttonModifier,
-            onClick = {}
+            onClick = {
+                graphToolsViewModel.stepNextTap()
+            }
         ) {
             Text("Шаг ->")
         }
@@ -193,7 +210,9 @@ fun AlgorithmButtons(
         Button(
             modifier = Modifier
                 .fillMaxWidth(),
-            onClick = {}
+            onClick = {
+                graphToolsViewModel.algTopSortTap()
+            }
         ) {
             Text(
                 text = "Топологическая сортировка",

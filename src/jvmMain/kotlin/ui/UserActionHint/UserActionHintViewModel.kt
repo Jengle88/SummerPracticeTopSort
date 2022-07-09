@@ -9,7 +9,8 @@ import utils.EditorState
 
 class UserActionHintViewModel(
 ) {
-    private fun getTitle(editorState: EditorState) = "Пояснение: " + when(editorState) {
+    private fun getTitle(editorState: EditorState): String =
+        "Пояснение: " + when (editorState) {
             EditorState.WAITING -> "режим ожидания"
             EditorState.SET_VERTEX -> "добавление вершины"
             EditorState.REMOVE_VERTEX -> "удаление вершины"
