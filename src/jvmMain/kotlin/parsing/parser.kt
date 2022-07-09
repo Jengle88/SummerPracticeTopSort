@@ -6,7 +6,7 @@ import com.google.gson.GsonBuilder
 import java.io.File
 
 object Parser {
-    fun readData(filePath: String): Graph {
+    fun readDataJSON(filePath: String): Graph {
         val builder = GsonBuilder()
         val gson = builder.create()
         var graph = Graph(arrayListOf())
@@ -15,7 +15,7 @@ object Parser {
         return graph
     }
 
-    fun writeData(filePath: String, graph: Graph){
+    fun writeDataJSON(filePath: String, graph: Graph){
         val gson = Gson()
         val text = gson.toJson(graph)
         val file = File(filePath)
