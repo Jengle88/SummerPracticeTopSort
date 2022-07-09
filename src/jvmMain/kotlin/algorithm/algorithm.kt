@@ -39,6 +39,7 @@ object GraphAlgorithm {
             if (vertex !in visited) {
                 result += TopSortUtil(graph, vertex, visited, order)
                 order = Collections.max(result.values) + 1
+                result += TopSortUtil(graph, vertex, visited, 0)
             }
         }
         return result
