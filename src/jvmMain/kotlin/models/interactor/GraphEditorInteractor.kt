@@ -1,28 +1,29 @@
 package models.interactor
 
-import data.mock.VertexMock
+import data.`object`.Graph
+import data.`object`.Vertex
 import models.repository.GraphRepository
 import org.jetbrains.skia.Point
 
-// TODO: 06.07.2022 Нужно сохранять позиции вершин графа в файл
 interface GraphEditorInteractor {
-    fun getGraph(): ArrayList<VertexMock>
-    fun addVertex(vertexName: String, center: Point) // TODO: 06.07.2022 Заменить на VertexDTO
-    fun removeVertex(vertexName: String)
-    fun linkVertexes(vertexName1: String, vertexName2: String)
-    fun removeLink(vertexName1: String, vertexName2: String)
-    fun setOrder(vertexName: String, order: Int)
+    fun getGraph(): Graph
+    fun addVertex(vertexName: String, center: Point): Vertex
+    fun removeVertex(vertexId: Long)
+    fun linkVertexes(vertexId1: Long, vertexId2: Long)
+    fun removeLink(vertexId1: Long, vertexId2: Long)
+    fun setOrder(vertexId: Long, order: Int)
 }
 
 class GraphEditorInteractorImpl(private val graphRepository: GraphRepository): GraphEditorInteractor {
-    override fun getGraph(): ArrayList<VertexMock> = graphRepository.getGraph()
+    override fun getGraph(): Graph = graphRepository.getGraph()
 
     override fun addVertex(vertexName: String, center: Point) = graphRepository.addVertex(vertexName, center)
 
-    override fun removeVertex(vertexName: String) = graphRepository.removeVertex(vertexName)
+    override fun removeVertex(vertexId: Long) = graphRepository.removeVertex(vertexId)
 
-    override fun linkVertexes(vertexName1: String, vertexName2: String) = graphRepository.linkVertexes(vertexName1, vertexName2)
-    override fun removeLink(vertexName1: String, vertexName2: String) = graphRepository.removeLink(vertexName1, vertexName2)
+    override fun linkVertexes(vertexId1: Long, vertexId2: Long) = graphRepository.linkVertexes(vertexId1, vertexId2)
 
-    override fun setOrder(vertexName: String, order: Int) = graphRepository.setOrder(vertexName, order)
+    override fun removeLink(vertexId1: Long, vertexId2: Long) = graphRepository.removeLink(vertexId1, vertexId2)
+
+    override fun setOrder(vertexId: Long, order: Int) = graphRepository.setOrder(vertexId, order)
 }

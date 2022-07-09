@@ -1,4 +1,5 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+package ui.MainScreen
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -13,7 +14,6 @@ import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.singleWindowApplication
 import ui.GraphEditor.GraphEditor
 import ui.InformationTables.InformationTables
-import ui.MainScreen.MainScreenViewModel
 import ui.TopBarElement.MainScreenTopBar
 import ui.UserActionHint.UserActionHint
 

@@ -1,13 +1,14 @@
 package models.repository
 
-import data.mock.VertexMock
+import data.`object`.Graph
+import data.`object`.Vertex
 import org.jetbrains.skia.Point
 
 interface GraphRepository {
-    fun getGraph(): ArrayList<VertexMock> // TODO: 06.07.2022 Заменить VertexVO на VertexDTO
-    fun addVertex(vertexName: String, center: Point) // TODO: 06.07.2022 Заменить String на VertexDTO
-    fun removeVertex(vertexName: String)
-    fun linkVertexes(vertexName1: String, vertexName2: String)
-    fun removeLink(vertexName1: String, vertexName2: String)
-    fun setOrder(vertexName: String, order: Int)
+    fun getGraph(): Graph
+    fun addVertex(vertexName: String, center: Point): Vertex
+    fun removeVertex(vertexId: Long)
+    fun linkVertexes(vertexId1: Long, vertexId2: Long)
+    fun removeLink(vertexId1: Long, vertexId2: Long)
+    fun setOrder(vertexId: Long, order: Int)
 }
