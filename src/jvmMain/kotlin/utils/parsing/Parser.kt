@@ -1,8 +1,8 @@
-package parsing
+package utils.parsing
 
-import data.dataGraph.*
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import data.`object`.Graph
 import java.io.File
 
 object Parser {

@@ -7,7 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import data.graphData.DataGraphLocator
-import data.repositoryImpl.GraphRepositoryImpl
+import data.repositoryImpl.GraphEditorRepositoryImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import models.interactor.GraphEditorInteractorImpl
 import ui.GraphEditor.AddVertexAlertDialog
@@ -25,7 +25,7 @@ fun GraphCanvas(
     val graphCanvasViewModel = remember {
         GraphCanvasViewModel(
             editorStateFlow,
-            GraphEditorInteractorImpl(GraphRepositoryImpl(DataGraphLocator.graph)),
+            GraphEditorInteractorImpl(GraphEditorRepositoryImpl(DataGraphLocator.graphFlow)),
             graph
         )
     }

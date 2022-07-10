@@ -38,7 +38,7 @@ fun AlgorithmTable(
     val algorithmTableViewModel = remember {
         mutableStateOf(
             AlgorithmTableViewModel(
-                AlgorithmTableInteractorImpl(DataGraphLocator.graph),
+                AlgorithmTableInteractorImpl(DataGraphLocator.graphFlow),
                 currentAlgorithm,
                 mapOfResult
             )
