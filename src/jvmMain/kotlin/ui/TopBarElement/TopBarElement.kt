@@ -9,11 +9,14 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import data.graphData.DataGraphLocator
 
 @Composable
 @Preview
-fun MainScreenTopBar(modifier: Modifier = Modifier) {
+fun MainScreenTopBar(
+    onClickLoadGraphButton: () -> Unit,
+    onClickSaveGraphButton: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     TopAppBar(
         modifier = modifier
     ) {
@@ -21,12 +24,12 @@ fun MainScreenTopBar(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Button(onClick = {
-                DataGraphLocator.readGraphData("./graphData.json")
+                onClickLoadGraphButton()
             }) {
                 Text("Загрузить")
             }
             Button(onClick = {
-                DataGraphLocator.saveGraphData("./graphData.json")
+                onClickSaveGraphButton()
             }) {
                 Text("Сохранить")
             }
