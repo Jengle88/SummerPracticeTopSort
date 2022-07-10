@@ -47,7 +47,7 @@ class GraphCanvasViewModel(
     private fun editorStateListener() {
         CoroutineScope(Dispatchers.Main).launch {
             editorStateFlow.collectLatest { state ->
-                if (state == EditorState.WAITING) {
+                if ("_SECOND" !in state.name) {
                     firstVertexForEdge?.color = Color.Black
                     firstVertexForEdge = null
                 }
