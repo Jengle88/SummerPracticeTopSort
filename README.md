@@ -24,10 +24,18 @@ Version 0.3
   JDK 11
 
 ### Запуск
-* **Создание JAR файла**: _./gradlew buildFullJar_
-  (будет лежать в папке SummerPracticeTopSort/build/libs)
-* **Запуск приложения из JAR файла**: (из папки SummerPracticeTopSort/build/libs) _java -jar SummerPracticeTopSort-1.0-SNAPSHOT-all.jar_
-* **Сборка + Запуск**: _./gradlew run_
+* **Создание JAR файла**:   (будет лежать в папке SummerPracticeTopSort/build/libs)
+```bash
+./gradlew buildFullJar
+```
+* **Запуск приложения из JAR файла**: (из папки SummerPracticeTopSort/build/libs)
+```bash
+java -jar SummerPracticeTopSort-1.0-SNAPSHOT-all.jar
+```
+* **Сборка + Запуск**:
+```bash
+./gradlew run
+```
 
 ### В работе использовалось:
 Kotlin: 1.6.10  
