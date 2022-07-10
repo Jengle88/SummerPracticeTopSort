@@ -21,28 +21,41 @@ import ui.UserActionHint.UserActionHint
 @Preview
 fun MainScreen() {
     MaterialTheme{
+        val mainScreenViewModel = remember { mutableStateOf(MainScreenViewModel()) }
+        val enterFileNameState = remember { mutableStateOf(false) }
         Scaffold(
             topBar = {
-                MainScreenTopBar()
+                MainScreenTopBar(
+                    onClickLoadGraphButton = {
+                        mainScreenViewModel.value.prepareAlertDialogForLoadData(enterFileNameState)
+                        mainScreenViewModel.value.showEnterFileDialog(enterFileNameState)
+                    },
+                    onClickSaveGraphButton = {
+                        mainScreenViewModel.value.prepareAlertDialogForSaveData(enterFileNameState)
+                        mainScreenViewModel.value.showEnterFileDialog(enterFileNameState)
+                    }
+                )
             }
         ) {
-            MainContent()
+            if (enterFileNameState.value) {
+                mainScreenViewModel.value.EnterFileNameAlertDialogFactory()
+            }
+            MainContent(mainScreenViewModel.value)
         }
     }
 }
 @Composable
-fun MainContent() {
-    val mainScreenViewModel = remember { mutableStateOf(MainScreenViewModel()) }
+fun MainContent(mainScreenViewModel: MainScreenViewModel) {
     Column {
         UserActionHint(
-            editorStateFlow = mainScreenViewModel.value.editorState,
+            editorStateFlow = mainScreenViewModel.editorState,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
         )
         GraphEditor(
-            editorStateFlow = mainScreenViewModel.value.editorState,
-            currentAlgorithm = mainScreenViewModel.value.currentAlgorithm,
+            editorStateFlow = mainScreenViewModel.editorState,
+            currentAlgorithm = mainScreenViewModel.currentAlgorithm,
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.75f)
@@ -50,8 +63,8 @@ fun MainContent() {
                 .padding(start = 8.dp)
         )
         InformationTables(
-            editorStateFlow = mainScreenViewModel.value.editorState,
-            currentAlgorithm = mainScreenViewModel.value.currentAlgorithm,
+            editorStateFlow = mainScreenViewModel.editorState,
+            currentAlgorithm = mainScreenViewModel.currentAlgorithm,
             modifier = Modifier
                 .fillMaxWidth()
                 .defaultMinSize(minHeight = 50.dp, minWidth = 150.dp)
