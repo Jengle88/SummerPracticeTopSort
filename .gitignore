@@ -2,6 +2,7 @@
 /build
 /.idea
 local.properties
+*.json
 
 # Compiled class file
 *.class
