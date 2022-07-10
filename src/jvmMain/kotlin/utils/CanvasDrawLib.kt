@@ -25,7 +25,7 @@ object CanvasDrawLib {
     }
 
     fun drawEdge(canvas: Canvas, point1: Point?, point2: Point?) {
-        if (point1 == null || point2 == null)
+        if (point1 == null || point2 == null || point1.getDistTo(point2) < 2 * VertexVO.radius)
             return
         val (newPoint1, newPoint2) = recalcPointsEdge(point1, point2)
         // основная линия
