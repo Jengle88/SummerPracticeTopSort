@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Canvas
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import models.interactor.GraphEditorInteractor
 import models.mapper.toVertexVO
@@ -63,7 +64,7 @@ class GraphCanvasViewModel(
             EditorState.SET_VERTEX -> {
                 firstVertexForEdge = null
                 addVertexAlertDialogState.value = true
-                addVertexToCanvas(lastPoint, height, width)
+                addVertexToCanvas(height, width)
             }
             EditorState.REMOVE_VERTEX -> {
                 firstVertexForEdge = null
@@ -132,22 +133,21 @@ class GraphCanvasViewModel(
     }
 
     private fun addVertexToCanvas(
-        point: Point,
         height: Int,
         width: Int
     ) {
         CoroutineScope(Dispatchers.Main).launch {
-            vertexNameFlow.collect {
+            vertexNameFlow.collectLatest {
                 if (it != "") {
-                    if (checkVertexPosition(point, height, width)) {
+                    if (checkVertexPosition(lastPoint, height, width)) {
                         val name = it
-                        vertexNameFlow.value = ""
                         val vertex = graphEditorInteractor.addVertex(
                             name,
-                            point
+                            lastPoint
                         ).toVertexVO()
                         graphVertex.add(vertex)
                     }
+                    vertexNameFlow.value = ""
                 }
             }
         }
