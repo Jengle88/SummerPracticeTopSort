@@ -3,6 +3,7 @@ package ui.GraphEditor.GraphCanvas
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Canvas
+import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,13 +30,28 @@ class GraphCanvasViewModel(
     private lateinit var lastPoint: Point
 
     init {
+        graphListener()
+        editorStateListener()
+    }
+
+    private fun graphListener() {
         CoroutineScope(Dispatchers.Main).launch {
             graphEditorInteractor.getGraph().collect { graph ->
                 graphVertex.clear()
                 graphVertex.addAll(graph.getVertexes().map { it.toVertexVO() })
                 firstVertexForEdge = null
             }
+        }
+    }
 
+    private fun editorStateListener() {
+        CoroutineScope(Dispatchers.Main).launch {
+            editorStateFlow.collectLatest { state ->
+                if (state == EditorState.WAITING) {
+                    firstVertexForEdge?.color = Color.Black
+                    firstVertexForEdge = null
+                }
+            }
         }
     }
 
@@ -91,8 +107,10 @@ class GraphCanvasViewModel(
     private fun setFirstEdgePointAdd(point: Point) {
         firstVertexForEdge =
             graphVertex.find { it.center.getDistTo(point) <= VertexVO.radius }
-        if (firstVertexForEdge != null)
+        if (firstVertexForEdge != null) {
+            firstVertexForEdge?.color = Color.Yellow
             editorStateFlow.value = EditorState.SET_EDGE_SECOND
+        }
     }
 
     private fun setSecondEdgePointForAdd(point: Point) {
@@ -106,6 +124,7 @@ class GraphCanvasViewModel(
             editorStateFlow.value = EditorState.SET_EDGE_FIRST
             // уведомляем об изменении графа
             graphVertex[graphVertex.lastIndex] = graphVertex.last()
+            firstVertexForEdge?.color = Color.Black
             firstVertexForEdge = null
         }
     }
@@ -113,8 +132,10 @@ class GraphCanvasViewModel(
     private fun setFirstEdgePointForRemove(point: Point) {
         firstVertexForEdge =
             graphVertex.find { it.center.getDistTo(point) <= VertexVO.radius }
-        if (firstVertexForEdge != null)
+        if (firstVertexForEdge != null) {
+            firstVertexForEdge?.color = Color.Red
             editorStateFlow.value = EditorState.REMOVE_EDGE_SECOND
+        }
     }
 
     private fun setSecondEdgePointForRemove(point: Point) {
@@ -128,6 +149,7 @@ class GraphCanvasViewModel(
             editorStateFlow.value = EditorState.REMOVE_EDGE_FIRST
             // уведомляем об изменении графа
             graphVertex[graphVertex.lastIndex] = graphVertex.last()
+            firstVertexForEdge?.color = Color.Black
             firstVertexForEdge = null
         }
     }
