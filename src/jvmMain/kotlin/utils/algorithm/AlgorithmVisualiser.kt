@@ -93,7 +93,7 @@ object AlgorithmVisualiser {
         protocol: ArrayList<State>
     ) {
         algorithmProtocol = AlgorithmProtocol(
-            listOfActions = protocol.mapIndexed { index, state -> Pair("$index) time: ${state.time} ms", state.action) }
+            listOfActions = protocol.mapIndexed { index, state -> Pair("${index+1}) time: ${state.time} ms", state.action) }
         )
         resultTableData.value = topSortResult.map { result -> Pair(result.key, result.value) }
         var index = 0
