@@ -10,7 +10,10 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.SkipNext
+import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -20,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import data.graphData.DataGraphLocator
-import utils.EditorState
+import utils.GraphToolsState
 import kotlinx.coroutines.flow.MutableStateFlow
 import models.interactor.AlgorithmInteractorImpl
 import utils.algorithm.Algorithm
@@ -29,13 +32,17 @@ import utils.algorithm.AlgorithmState
 @Composable
 @Preview
 fun GraphTools(
-    editorStateFlow: MutableStateFlow<EditorState>,
+    graphToolsStateFlow: MutableStateFlow<GraphToolsState>,
     currentAlgorithm: MutableStateFlow<Pair<Algorithm, AlgorithmState>>,
     modifier: Modifier = Modifier
 ) {
+    val enableGraphButtons = remember { mutableStateOf(true) }
+    val enableAlgorithmButtons = remember { mutableStateOf(true) }
     val graphToolsViewModel = remember { mutableStateOf(GraphToolsViewModel(
+        enableGraphButtons,
+        enableAlgorithmButtons,
         AlgorithmInteractorImpl(DataGraphLocator.graphFlow),
-        editorStateFlow,
+        graphToolsStateFlow,
         currentAlgorithm
     )) }
     Column(
@@ -47,9 +54,9 @@ fun GraphTools(
         val rowButtonsModifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 8.dp)
-        EditGraphElements(rowButtonsModifier, buttonModifier, graphToolsViewModel.value)
-        AlgorithmPanel(rowButtonsModifier, buttonModifier, graphToolsViewModel.value)
-        AlgorithmButtons(rowButtonsModifier, graphToolsViewModel.value)
+        EditGraphElements(rowButtonsModifier, buttonModifier, graphToolsViewModel.value, enableGraphButtons)
+        AlgorithmPanel(rowButtonsModifier, buttonModifier, graphToolsViewModel.value, enableAlgorithmButtons)
+        AlgorithmButtons(rowButtonsModifier, graphToolsViewModel.value, enableAlgorithmButtons)
     }
 }
 
@@ -57,7 +64,8 @@ fun GraphTools(
 fun EditGraphElements(
     rowButtonsModifier: Modifier,
     buttonModifier: Modifier,
-    graphToolsViewModel: GraphToolsViewModel
+    graphToolsViewModel: GraphToolsViewModel,
+    enableGraphButtons: MutableState<Boolean>
 ) {
     Text(
         modifier = Modifier
@@ -73,6 +81,7 @@ fun EditGraphElements(
         IconButton(
             modifier = buttonModifier
                 .size(64.dp),
+            enabled = enableGraphButtons.value,
             onClick = {
                 graphToolsViewModel.addVertexTap()
             }
@@ -85,6 +94,7 @@ fun EditGraphElements(
         IconButton(
             modifier = buttonModifier
                 .size(64.dp),
+            enabled = enableGraphButtons.value,
             onClick = {
                 graphToolsViewModel.removeVertexTap()
             }
@@ -102,6 +112,7 @@ fun EditGraphElements(
         IconButton(
             modifier = buttonModifier
                 .size(64.dp),
+            enabled = enableGraphButtons.value,
             onClick = {
                 graphToolsViewModel.addEdgeTap()
             }
@@ -114,6 +125,7 @@ fun EditGraphElements(
         IconButton(
             modifier = buttonModifier
                 .size(64.dp),
+            enabled = enableGraphButtons.value,
             onClick = {
                 graphToolsViewModel.removeEdgeTap()
             }
@@ -129,7 +141,8 @@ fun EditGraphElements(
 fun AlgorithmPanel(
     rowButtonsModifier: Modifier,
     buttonModifier: Modifier,
-    graphToolsViewModel: GraphToolsViewModel
+    graphToolsViewModel: GraphToolsViewModel,
+    enableAlgorithmButtons: MutableState<Boolean>
 ) {
     Text(
         modifier = Modifier
@@ -146,6 +159,7 @@ fun AlgorithmPanel(
     ) {
         Button(
             modifier = buttonModifier,
+            enabled = enableAlgorithmButtons.value,
             onClick = {
                 graphToolsViewModel.pauseTap()
             }
@@ -157,6 +171,7 @@ fun AlgorithmPanel(
         }
         Button(
             modifier = buttonModifier,
+            enabled = enableAlgorithmButtons.value,
             onClick = {
                 graphToolsViewModel.continueTap()
             }
@@ -174,6 +189,37 @@ fun AlgorithmPanel(
     ) {
         Button(
             modifier = buttonModifier,
+            enabled = enableAlgorithmButtons.value,
+            onClick = {
+                graphToolsViewModel.beginOfVisualisation()
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Default.SkipPrevious,
+                contentDescription = null
+            )
+        }
+        Button(
+            modifier = buttonModifier,
+            enabled = enableAlgorithmButtons.value,
+            onClick = {
+                graphToolsViewModel.finishOfVisualisation()
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Default.SkipNext,
+                contentDescription = null
+            )
+        }
+    }
+    Row(
+        modifier = rowButtonsModifier
+            .padding(bottom = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Button(
+            modifier = buttonModifier,
+            enabled = enableAlgorithmButtons.value,
             onClick = {
                 graphToolsViewModel.stepBackTap()
             }
@@ -182,6 +228,7 @@ fun AlgorithmPanel(
         }
         Button(
             modifier = buttonModifier,
+            enabled = enableAlgorithmButtons.value,
             onClick = {
                 graphToolsViewModel.stepNextTap()
             }
@@ -194,7 +241,8 @@ fun AlgorithmPanel(
 @Composable
 fun AlgorithmButtons(
     rowButtonsModifier: Modifier,
-    graphToolsViewModel: GraphToolsViewModel
+    graphToolsViewModel: GraphToolsViewModel,
+    enableAlgorithmButtons: MutableState<Boolean>
 ) {
     Text(
         modifier = Modifier
@@ -210,6 +258,7 @@ fun AlgorithmButtons(
         Button(
             modifier = Modifier
                 .fillMaxWidth(),
+            enabled = enableAlgorithmButtons.value,
             onClick = {
                 graphToolsViewModel.algTopSortTap()
             }

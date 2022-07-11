@@ -1,6 +1,6 @@
 package utils
 
-enum class EditorState {
+enum class GraphToolsState {
     WAITING,
     SET_VERTEX,
     REMOVE_VERTEX,
@@ -8,5 +8,10 @@ enum class EditorState {
     SET_EDGE_SECOND,
     REMOVE_EDGE_FIRST,
     REMOVE_EDGE_SECOND,
-    // TODO: 06.07.2022 Продолжить список состояний
+    PAUSE,
+    CONTINUE,
+    TO_BEGIN,
+    TO_FINISH,
+    STEP_BACK,
+    STEP_NEXT
 }

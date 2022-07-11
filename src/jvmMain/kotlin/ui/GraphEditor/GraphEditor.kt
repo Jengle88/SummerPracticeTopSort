@@ -15,13 +15,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import ui.GraphEditor.GraphCanvas.GraphCanvas
 import ui.GraphEditor.GraphTools.GraphTools
 import utils.algorithm.Algorithm
-import utils.EditorState
+import utils.GraphToolsState
 import utils.algorithm.AlgorithmState
 
 @Composable
 @Preview
 fun GraphEditor(
-    editorStateFlow: MutableStateFlow<EditorState>,
+    graphToolsStateFlow: MutableStateFlow<GraphToolsState>,
     currentAlgorithm: MutableStateFlow<Pair<Algorithm, AlgorithmState>>,
     modifier: Modifier = Modifier
 ) {
@@ -31,7 +31,7 @@ fun GraphEditor(
         val boxWithConstraintsScope = this
         val graphEditorWidth = 325.dp
         GraphCanvas(
-            editorStateFlow = editorStateFlow,
+            graphToolsStateFlow = graphToolsStateFlow,
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .size(
@@ -43,7 +43,7 @@ fun GraphEditor(
                 )
         )
         GraphTools(
-            editorStateFlow = editorStateFlow,
+            graphToolsStateFlow = graphToolsStateFlow,
             currentAlgorithm = currentAlgorithm,
             modifier = Modifier
                 .align(Alignment.TopEnd)

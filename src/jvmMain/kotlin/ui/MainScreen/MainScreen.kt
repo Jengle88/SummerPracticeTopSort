@@ -48,13 +48,13 @@ fun MainScreen() {
 fun MainContent(mainScreenViewModel: MainScreenViewModel) {
     Column {
         UserActionHint(
-            editorStateFlow = mainScreenViewModel.editorState,
+            graphToolsStateFlow = mainScreenViewModel.graphToolsState,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
         )
         GraphEditor(
-            editorStateFlow = mainScreenViewModel.editorState,
+            graphToolsStateFlow = mainScreenViewModel.graphToolsState,
             currentAlgorithm = mainScreenViewModel.currentAlgorithm,
             modifier = Modifier
                 .fillMaxWidth()
@@ -63,7 +63,7 @@ fun MainContent(mainScreenViewModel: MainScreenViewModel) {
                 .padding(start = 8.dp)
         )
         InformationTables(
-            editorStateFlow = mainScreenViewModel.editorState,
+            graphToolsStateFlow = mainScreenViewModel.graphToolsState,
             currentAlgorithm = mainScreenViewModel.currentAlgorithm,
             modifier = Modifier
                 .fillMaxWidth()

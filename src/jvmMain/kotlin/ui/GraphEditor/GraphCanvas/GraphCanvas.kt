@@ -10,8 +10,9 @@ import data.graphData.DataGraphLocator
 import data.repositoryImpl.GraphEditorRepositoryImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import models.interactor.GraphEditorInteractorImpl
-import ui.GraphEditor.AddVertexAlertDialog
-import utils.EditorState
+import ui.GraphEditor.AddVertexAlertDialog.AddVertexAlertDialog
+import ui.GraphEditor.ShowVertexNameDialog.ShowVertexNameDialogState
+import utils.GraphToolsState
 import utils.toPoint
 
 
@@ -19,28 +20,39 @@ import utils.toPoint
 @Preview
 fun GraphCanvas(
     modifier: Modifier = Modifier,
-    editorStateFlow: MutableStateFlow<EditorState>
+    graphToolsStateFlow: MutableStateFlow<GraphToolsState>
 ) {
     val graph = remember { mutableStateListOf<VertexVO>() }
     val graphCanvasViewModel = remember {
         GraphCanvasViewModel(
-            editorStateFlow,
+            graphToolsStateFlow,
             GraphEditorInteractorImpl(GraphEditorRepositoryImpl(DataGraphLocator.graphFlow)),
             graph
         )
     }
+    val vertexNameForAlertDialog = remember { mutableStateOf("") }
     val addVertexAlertDialogState = AddVertexAlertDialog(graphCanvasViewModel.vertexNameFlow)
+    val showVertexNameDialogState = ShowVertexNameDialogState(vertexNameForAlertDialog)
     Canvas(
         modifier = modifier
             .pointerInput(Unit) {
-                this.detectTapGestures(onTap = { offset ->
-                    graphCanvasViewModel.selectPoint(
-                        addVertexAlertDialogState,
-                        offset.toPoint(),
-                        this.size.height,
-                        this.size.width
-                    )
-                })
+                this.detectTapGestures(
+                    onTap = { offset ->
+                        graphCanvasViewModel.selectPoint(
+                            addVertexAlertDialogState,
+                            offset.toPoint(),
+                            this.size.height,
+                            this.size.width
+                        )
+                    },
+                    onLongPress = { offset ->
+                        graphCanvasViewModel.showVertexName(
+                            offset.toPoint(),
+                            vertexNameForAlertDialog,
+                            showVertexNameDialogState
+                        )
+                    }
+                )
             }
     ) {
         graphCanvasViewModel.drawGraph(this.drawContext.canvas, graph.toList())

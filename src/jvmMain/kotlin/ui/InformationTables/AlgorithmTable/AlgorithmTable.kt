@@ -16,18 +16,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import data.graphData.DataGraphLocator
 import kotlinx.coroutines.flow.MutableStateFlow
 import models.interactor.AlgorithmTableInteractorImpl
 import ui.InformationTables.TableItem
 import utils.algorithm.Algorithm
-import utils.EditorState
 import utils.algorithm.AlgorithmState
 
 @Composable
 @Preview
 fun AlgorithmTable(
-    editorStateFlow: MutableStateFlow<EditorState>,
     currentAlgorithm: MutableStateFlow<Pair<Algorithm, AlgorithmState>>,
     modifier: Modifier = Modifier
 ) {
@@ -38,7 +35,7 @@ fun AlgorithmTable(
     val algorithmTableViewModel = remember {
         mutableStateOf(
             AlgorithmTableViewModel(
-                AlgorithmTableInteractorImpl(DataGraphLocator.graphFlow),
+                AlgorithmTableInteractorImpl(),
                 currentAlgorithm,
                 mapOfResult
             )

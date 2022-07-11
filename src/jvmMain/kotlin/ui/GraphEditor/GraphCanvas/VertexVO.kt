@@ -12,6 +12,6 @@ data class VertexVO(
 
     companion object {
         const val radius = 25f
-        const val cntLetters = 9
+        const val cntLetters = 6
     }
 }
