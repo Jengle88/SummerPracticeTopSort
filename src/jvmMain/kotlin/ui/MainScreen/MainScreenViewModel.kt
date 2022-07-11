@@ -1,10 +1,10 @@
 package ui.MainScreen
 
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import data.graphData.DataGraphLocator
 import utils.GraphToolsState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,9 +45,18 @@ class MainScreenViewModel {
                 dismissButtonAction()
             },
             text = {
-                TextField(value = nameFile.value, label = { Text(alertDialogLabel) }, onValueChange = { name ->
-                    nameFile.value = name
-                })
+                val focusRequester = remember { FocusRequester() }
+                TextField(
+                    modifier = Modifier.focusRequester(focusRequester),
+                    value = nameFile.value,
+                    label = { Text(alertDialogLabel) },
+                    onValueChange = { name ->
+                        nameFile.value = name
+                    }
+                )
+                LaunchedEffect(Unit) {
+                    focusRequester.requestFocus()
+                }
             }
         )
     }
