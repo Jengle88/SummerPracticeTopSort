@@ -25,6 +25,9 @@ class GraphCanvasViewModel(
     private val font = Font().apply {
         size = 15f
     }
+    // изменение вариации вершины перед нанесением на холст
+    private var postProcessingVertexBeforeDraw: MutableMap<Long, VertexVO> = mutableMapOf()
+
     private var firstVertexForEdge: VertexVO? = null
     val vertexNameFlow = MutableStateFlow("")
     private lateinit var lastPoint: Point
@@ -39,6 +42,7 @@ class GraphCanvasViewModel(
             graphEditorInteractor.getGraph().collect { graph ->
                 graphVertex.clear()
                 graphVertex.addAll(graph.getVertexes().map { it.toVertexVO() })
+                postProcessingVertexBeforeDraw.clear()
                 firstVertexForEdge = null
             }
         }
@@ -48,7 +52,7 @@ class GraphCanvasViewModel(
         CoroutineScope(Dispatchers.Main).launch {
             graphToolsStateFlow.collectLatest { state ->
                 if ("_SECOND" !in state.name) {
-                    firstVertexForEdge?.color = Color.Black
+                    postProcessingVertexBeforeDraw.clear()
                     firstVertexForEdge = null
                 }
             }
@@ -58,7 +62,8 @@ class GraphCanvasViewModel(
     fun drawGraph(canvas: Canvas, value: List<VertexVO>) {
         val mapVertex: MutableMap<Long, Point> = mutableMapOf()
         for (vertex in value) {
-            CanvasDrawLib.drawVertex(canvas, vertex, font)
+            val vertexForDraw = postProcessingVertexBeforeDraw.getOrDefault(vertex.id, vertex)
+            CanvasDrawLib.drawVertex(canvas, vertexForDraw, font)
             mapVertex[vertex.id] = vertex.center
         }
         for (vertex in value) {
@@ -78,11 +83,13 @@ class GraphCanvasViewModel(
         rememberPoint(point)
         when (graphToolsStateFlow.value) {
             GraphToolsState.SET_VERTEX -> {
+                postProcessingVertexBeforeDraw.clear()
                 firstVertexForEdge = null
                 addVertexAlertDialogState.value = true
                 addVertexToCanvas(height, width)
             }
             GraphToolsState.REMOVE_VERTEX -> {
+                postProcessingVertexBeforeDraw.clear()
                 firstVertexForEdge = null
                 removeVertexFromCanvas(lastPoint)
             }
@@ -108,7 +115,7 @@ class GraphCanvasViewModel(
         firstVertexForEdge =
             graphVertex.find { it.center.getDistTo(point) <= VertexVO.radius }
         if (firstVertexForEdge != null) {
-            firstVertexForEdge?.color = Color.Yellow
+            postProcessingVertexBeforeDraw[firstVertexForEdge!!.id] = firstVertexForEdge!!.copy(color = Color.Yellow)
             graphToolsStateFlow.value = GraphToolsState.SET_EDGE_SECOND
         }
     }
@@ -124,7 +131,7 @@ class GraphCanvasViewModel(
             graphToolsStateFlow.value = GraphToolsState.SET_EDGE_FIRST
             // уведомляем об изменении графа
             graphVertex[graphVertex.lastIndex] = graphVertex.last()
-            firstVertexForEdge?.color = Color.Black
+            postProcessingVertexBeforeDraw.clear()
             firstVertexForEdge = null
         }
     }
@@ -133,7 +140,8 @@ class GraphCanvasViewModel(
         firstVertexForEdge =
             graphVertex.find { it.center.getDistTo(point) <= VertexVO.radius }
         if (firstVertexForEdge != null) {
-            firstVertexForEdge?.color = Color.Red
+            postProcessingVertexBeforeDraw[firstVertexForEdge!!.id] = firstVertexForEdge!!.copy(color = Color.Red)
+//            firstVertexForEdge?.color = Color.Red
             graphToolsStateFlow.value = GraphToolsState.REMOVE_EDGE_SECOND
         }
     }
@@ -149,7 +157,8 @@ class GraphCanvasViewModel(
             graphToolsStateFlow.value = GraphToolsState.REMOVE_EDGE_FIRST
             // уведомляем об изменении графа
             graphVertex[graphVertex.lastIndex] = graphVertex.last()
-            firstVertexForEdge?.color = Color.Black
+//            firstVertexForEdge?.color = Color.Black
+            postProcessingVertexBeforeDraw.clear()
             firstVertexForEdge = null
         }
     }
