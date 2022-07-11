@@ -15,6 +15,9 @@ repositories {
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 }
+dependencies {
+    implementation("org.junit.jupiter:junit-jupiter:5.8.1")
+}
 
 kotlin {
     jvm {
@@ -39,7 +42,6 @@ kotlin {
             }
         }
         val jvmTest by getting
-
     }
 }
 

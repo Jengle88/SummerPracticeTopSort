@@ -1,0 +1,34 @@
+{
+  "vertexes":
+  [
+    {
+      "id": 0,
+      "name": "A",
+      "center": {"x": 10.0, "y": 15.0},
+      "order": 0,
+      "edges": [1, 3]
+    },
+    {
+      "id": 1,
+      "name": "B",
+      "center": {"x": 100.0, "y": 150.0},
+      "order": 0,
+      "edges": [2]
+    },
+    {
+      "id": 2,
+      "name": "C",
+      "center": {"x": 50.0, "y": 15.0},
+      "order": 0,
+      "edges": [3]
+    },
+    {
+      "id": 3,
+      "name": "D",
+      "center": {"x": 75.0, "y": 200.0},
+      "order": 0,
+      "edges": []
+    }
+  ]
+
+}
