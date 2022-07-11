@@ -13,7 +13,6 @@ class AlgorithmInteractorImpl(private val graphFlow: MutableStateFlow<Graph>):
             vertex.order = order
         }
         AlgorithmVisualiser.loadResult(
-            kindOfVertexResult = { vertex -> "Order: ${vertex.order}" },
             topSortResult = topSortResult,
             protocol = protocol
         )

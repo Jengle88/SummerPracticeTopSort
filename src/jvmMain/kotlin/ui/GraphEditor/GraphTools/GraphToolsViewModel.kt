@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import models.interactor.AlgorithmInteractorImpl
 import utils.algorithm.Algorithm
 import utils.algorithm.AlgorithmState
+import utils.algorithm.AlgorithmVisualiser
 
 class GraphToolsViewModel(
     private val enableGraphButtons: MutableState<Boolean>,
@@ -66,16 +67,23 @@ class GraphToolsViewModel(
     fun continueTap() {
         graphToolsStateFlow.value = GraphToolsState.CONTINUE
         currentAlgorithm.value = Pair(currentAlgorithm.value.first, AlgorithmState.IN_PROGRESS_AUTO)
+        if ("IN_PROGRESS" in AlgorithmVisualiser.algorithmState.name)
+            AlgorithmVisualiser.finishVisualise()
+        else {
+            // TODO: 11.07.2022 возобновить работу
+        }
     }
 
     fun stepBackTap() {
         graphToolsStateFlow.value = GraphToolsState.STEP_BACK
         currentAlgorithm.value = Pair(currentAlgorithm.value.first, AlgorithmState.IN_PROGRESS_USER)
+        AlgorithmVisualiser.stepBack()
     }
 
     fun stepNextTap() {
         graphToolsStateFlow.value = GraphToolsState.STEP_NEXT
         currentAlgorithm.value = Pair(currentAlgorithm.value.first, AlgorithmState.IN_PROGRESS_USER)
+        AlgorithmVisualiser.stepNext()
     }
 
     fun algTopSortTap() {

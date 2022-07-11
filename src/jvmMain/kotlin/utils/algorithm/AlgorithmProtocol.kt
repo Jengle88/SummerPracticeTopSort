@@ -1,9 +1,6 @@
 package utils.algorithm
 
-import data.`object`.Vertex
-
 data class AlgorithmProtocol(
-    private val kindOfVertexResult: (Vertex) -> String,
     private val listOfActions: List<Pair<String, String>>
 ) {
     fun getCountActions() = listOfActions.size

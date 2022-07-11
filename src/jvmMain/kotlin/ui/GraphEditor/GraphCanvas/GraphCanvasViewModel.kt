@@ -15,6 +15,7 @@ import org.jetbrains.skia.Font
 import org.jetbrains.skia.Point
 import utils.CanvasDrawLib
 import utils.GraphToolsState
+import utils.algorithm.AlgorithmVisualiser
 import utils.getDistTo
 
 class GraphCanvasViewModel(
@@ -26,7 +27,7 @@ class GraphCanvasViewModel(
         size = 15f
     }
     // изменение вариации вершины перед нанесением на холст
-    private var postProcessingVertexBeforeDraw: MutableMap<Long, VertexVO> = mutableMapOf()
+    private var postProcessingVertexBeforeDraw: MutableMap<Long, (VertexVO) -> VertexVO > = mutableMapOf()
 
     private var firstVertexForEdge: VertexVO? = null
     val vertexNameFlow = MutableStateFlow("")
@@ -46,6 +47,11 @@ class GraphCanvasViewModel(
                 firstVertexForEdge = null
             }
         }
+        CoroutineScope(Dispatchers.Main).launch {
+            AlgorithmVisualiser.graphCanvasData.collect {
+                postProcessingVertexBeforeDraw = it.toMutableMap()
+            }
+        }
     }
 
     private fun editorStateListener() {
@@ -62,7 +68,7 @@ class GraphCanvasViewModel(
     fun drawGraph(canvas: Canvas, value: List<VertexVO>) {
         val mapVertex: MutableMap<Long, Point> = mutableMapOf()
         for (vertex in value) {
-            val vertexForDraw = postProcessingVertexBeforeDraw.getOrDefault(vertex.id, vertex)
+            val vertexForDraw = postProcessingVertexBeforeDraw[vertex.id]?.invoke(vertex) ?: vertex
             CanvasDrawLib.drawVertex(canvas, vertexForDraw, font)
             mapVertex[vertex.id] = vertex.center
         }
@@ -110,12 +116,14 @@ class GraphCanvasViewModel(
 
     }
 
-
     private fun setFirstEdgePointAdd(point: Point) {
         firstVertexForEdge =
             graphVertex.find { it.center.getDistTo(point) <= VertexVO.radius }
         if (firstVertexForEdge != null) {
-            postProcessingVertexBeforeDraw[firstVertexForEdge!!.id] = firstVertexForEdge!!.copy(color = Color.Yellow)
+//            postProcessingVertexBeforeDraw[firstVertexForEdge!!.id] = firstVertexForEdge!!.copy(color = Color.Yellow)
+            postProcessingVertexBeforeDraw[firstVertexForEdge!!.id] = { vertex ->
+                vertex.copy(color = Color.Yellow)
+            }
             graphToolsStateFlow.value = GraphToolsState.SET_EDGE_SECOND
         }
     }
@@ -140,7 +148,10 @@ class GraphCanvasViewModel(
         firstVertexForEdge =
             graphVertex.find { it.center.getDistTo(point) <= VertexVO.radius }
         if (firstVertexForEdge != null) {
-            postProcessingVertexBeforeDraw[firstVertexForEdge!!.id] = firstVertexForEdge!!.copy(color = Color.Red)
+//            postProcessingVertexBeforeDraw[firstVertexForEdge!!.id] = firstVertexForEdge!!.copy(color = Color.Red)
+            postProcessingVertexBeforeDraw[firstVertexForEdge!!.id] = { vertex ->
+                vertex.copy(color = Color.Red)
+            }
 //            firstVertexForEdge?.color = Color.Red
             graphToolsStateFlow.value = GraphToolsState.REMOVE_EDGE_SECOND
         }

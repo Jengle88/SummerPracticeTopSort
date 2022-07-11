@@ -1,6 +1,7 @@
 package utils.algorithm
 
 import actions.State.State
+import androidx.compose.ui.graphics.Color
 import data.`object`.Vertex
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,8 @@ object AlgorithmVisualiser {
         field = value
         algorithmProtocolPosition = 0
     }
-    val graphCanvasData: MutableStateFlow<Map<Long, (VertexVO) -> Unit>> = MutableStateFlow(mapOf())
+    val graphCanvasData: MutableStateFlow<Map<Long, (VertexVO) -> VertexVO>> = MutableStateFlow(mapOf())
+    var listOfCanvasVisualise: Map<Int, Map<Long, (VertexVO) -> VertexVO>> = mapOf()
     val resultTableData: MutableStateFlow<List<Pair<Vertex, Int>>> = MutableStateFlow(listOf())
     val actionsTableData: MutableStateFlow<List<Pair<String, String>>> = MutableStateFlow(
         listOf()
@@ -44,20 +46,25 @@ object AlgorithmVisualiser {
 
     fun stepNext() { // TODO: 11.07.2022 Проверить
         if (checkProtocolSize()) return
+        algorithmState = AlgorithmState.IN_PROGRESS_USER
         if (algorithmProtocolPosition + 1 < algorithmProtocol!!.getCountActions())
             algorithmProtocolPosition++
-
+        updateAlgorithmVisualiserState()
     }
 
     fun stepBack() { // TODO: 11.07.2022 Проверить
         if(checkProtocolSize()) return
-        if (algorithmProtocolPosition - 1 > algorithmProtocol!!.getCountActions())
+        algorithmState = AlgorithmState.IN_PROGRESS_USER
+        if (algorithmProtocolPosition - 1 >= 0)
             algorithmProtocolPosition--
+        updateAlgorithmVisualiserState()
     }
 
     fun finishVisualise() {
         if (checkProtocolSize()) return
+        algorithmState = AlgorithmState.FINISH
         algorithmProtocolPosition = (algorithmProtocol?.getCountActions() ?: 0) - 1
+        updateAlgorithmVisualiserState()
     }
 
     private fun checkProtocolSize(): Boolean {
@@ -67,19 +74,25 @@ object AlgorithmVisualiser {
     }
 
     fun loadResult(
-        kindOfVertexResult: (Vertex) -> String,
         topSortResult: Map<Vertex, Int>,
         protocol: ArrayList<State>
     ) {
         algorithmProtocol = AlgorithmProtocol(
-            kindOfVertexResult = kindOfVertexResult,
             listOfActions = protocol.mapIndexed { index, state -> Pair("$index) time: ${state.time}", state.action) }
         )
         resultTableData.value = topSortResult.map { result -> Pair(result.key, result.value) }
-        updateAlgorithmVisualiserState(algorithmProtocol?.getListActions() ?: listOf())
+        var index = 0
+        listOfCanvasVisualise = protocol.associate { state -> index++ to mapOf(
+            state.srcVertex to { vertex -> vertex.copy(color = Color.Yellow) },
+            (state.dstVertex ?: -1) to { vertex -> vertex.copy(color = Color.Red) }
+        )
+        }
+        algorithmState = AlgorithmState.IN_PROGRESS_AUTO
+        updateAlgorithmVisualiserState()
     }
 
-    private fun updateAlgorithmVisualiserState(protocolActions: List<Pair<String, String>>) {
-        actionsTableData.value = protocolActions
+    private fun updateAlgorithmVisualiserState() {
+        actionsTableData.value = algorithmProtocol?.getListActions(0 until algorithmProtocolPosition) ?: listOf()
+        graphCanvasData.value = listOfCanvasVisualise[algorithmProtocolPosition - 1] ?: mapOf()
     }
 }
