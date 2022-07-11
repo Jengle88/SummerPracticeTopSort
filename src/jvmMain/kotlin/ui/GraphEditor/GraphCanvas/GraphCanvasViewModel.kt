@@ -17,6 +17,7 @@ import utils.CanvasDrawLib
 import utils.GraphToolsState
 import utils.algorithm.AlgorithmVisualiser
 import utils.getDistTo
+import kotlin.properties.Delegates
 
 class GraphCanvasViewModel(
     private val graphToolsStateFlow: MutableStateFlow<GraphToolsState>,
@@ -32,6 +33,8 @@ class GraphCanvasViewModel(
     private var firstVertexForEdge: VertexVO? = null
     val vertexNameFlow = MutableStateFlow("")
     private lateinit var lastPoint: Point
+    private var height by Delegates.notNull<Int>()
+    private var width by Delegates.notNull<Int>()
 
     init {
         graphListener()
@@ -87,12 +90,13 @@ class GraphCanvasViewModel(
         width: Int
     ) {
         rememberPoint(point)
+        rememberWindowSize(height, width)
         when (graphToolsStateFlow.value) {
             GraphToolsState.SET_VERTEX -> {
                 postProcessingVertexBeforeDraw.clear()
                 firstVertexForEdge = null
                 addVertexAlertDialogState.value = true
-                addVertexToCanvas(height, width)
+                addVertexToCanvas()
             }
             GraphToolsState.REMOVE_VERTEX -> {
                 postProcessingVertexBeforeDraw.clear()
@@ -113,6 +117,12 @@ class GraphCanvasViewModel(
             }
             else -> {}
         }
+
+    }
+
+    private fun rememberWindowSize(height: Int, width: Int) {
+        this.height = height
+        this.width = width
 
     }
 
@@ -174,12 +184,9 @@ class GraphCanvasViewModel(
         }
     }
 
-    private fun addVertexToCanvas(
-        height: Int,
-        width: Int
-    ) {
+    private fun addVertexToCanvas() {
         CoroutineScope(Dispatchers.Main).launch {
-            vertexNameFlow.collectLatest {
+            vertexNameFlow.collect {
                 if (it != "") {
                     if (checkVertexPosition(lastPoint, height, width)) {
                         val name = it
