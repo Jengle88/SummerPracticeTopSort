@@ -10,31 +10,58 @@ import org.jetbrains.skiko.currentNanoTime
 
 object GraphAlgorithm {
     private var startTime = 0L
-    private fun addState(srcVertex: Vertex, dstVertex: Vertex? = null, action: Actions,
-                         protocol: ArrayList<State>) {
+    private fun addState(
+        srcVertex: Vertex, dstVertex: Vertex? = null, action: Actions,
+        protocol: ArrayList<State>
+    ) {
         when (action) {
-            Actions.DOWN_TO_EDGE -> protocol.add(State(
-                getCurrentTime(),
-                "Down from vertex ${srcVertex.getName()} (id = ${srcVertex.getId()}) to ${dstVertex?.getName()} (id = ${dstVertex?.getId()})",
-                srcVertex.getId(),
-                dstVertex?.getId()))
+            Actions.DOWN_TO_EDGE -> protocol.add(
+                State(
+                    getCurrentTime(),
+                    "Down from vertex ${srcVertex.getName()} (id = ${srcVertex.getId()}) to ${dstVertex?.getName()} (id = ${dstVertex?.getId()})",
+                    srcVertex.getId(),
+                    dstVertex?.getId()
+                )
+            )
 
-            Actions.GET_ORDER -> protocol.add(State(
-                getCurrentTime(),
-                "Vertex ${srcVertex.getName()} (id = ${srcVertex.getId()}) got order",
-                srcVertex.getId()
-            ))
+            Actions.GET_ORDER -> protocol.add(
+                State(
+                    getCurrentTime(),
+                    "Vertex ${srcVertex.getName()} (id = ${srcVertex.getId()}) got order",
+                    srcVertex.getId()
+                )
+            )
 
-            Actions.ADDED_TO_STACK -> protocol.add(State(
-                getCurrentTime(),
-                "Vertex ${srcVertex.getName()} (id = ${srcVertex.getId()}) added to stack",
-                srcVertex.getId()
-            ))
+            Actions.ADDED_TO_STACK -> protocol.add(
+                State(
+                    getCurrentTime(),
+                    "Vertex ${srcVertex.getName()} (id = ${srcVertex.getId()}) added to stack",
+                    srcVertex.getId()
+                )
+            )
         }
     }
 
     private fun getCurrentTime(): String {
         return (currentNanoTime() / 1000000 - startTime).toString()
+    }
+
+    private fun checkGraphForCycle(
+        graph: Graph,
+        current: Vertex,
+        visited: ArrayList<Vertex>,
+        checkList: ArrayList<Boolean>
+    ) {
+        visited.add(current)
+        val edges = initEdges(graph, current)
+        for (edge in edges.values) {
+            if (edge !in visited) {
+                checkGraphForCycle(graph, edge, visited, checkList)
+            } else {
+                checkList.add(false)
+            }
+        }
+        checkList.add(true)
     }
 
     private fun initEdges(graph: Graph, current: Vertex): MutableMap<Long, Vertex> {
@@ -61,7 +88,15 @@ object GraphAlgorithm {
     fun TopSort(graph: Graph): Map<Vertex, Int> {
         val stackOfVertexes: Stack<Vertex> = Stack()
         val vertexes = graph.getVertexes()
-        val visited: ArrayList<Vertex> = arrayListOf()
+        var visited: ArrayList<Vertex> = arrayListOf()
+        val checkList: ArrayList<Boolean> = arrayListOf()
+        for (vertex in vertexes) {
+            if (vertex !in visited) {
+                checkGraphForCycle(graph, vertex, visited, checkList)
+            }
+        }
+        if (false in checkList) return mapOf()
+        visited = arrayListOf()
         for (vertex in vertexes) {
             if (vertex !in visited) {
                 TopSortUtil(graph, vertex, visited, stackOfVertexes)
@@ -75,8 +110,11 @@ object GraphAlgorithm {
         return result
     }
 
-    private fun TopSortUtilActions(graph: Graph, current: Vertex, visited: ArrayList<Vertex>,
-                                   stackOfVertexes: Stack<Vertex>, protocol: ArrayList<State>) {
+
+    private fun TopSortUtilActions(
+        graph: Graph, current: Vertex, visited: ArrayList<Vertex>,
+        stackOfVertexes: Stack<Vertex>, protocol: ArrayList<State>
+    ) {
         visited.add(current)
         val edges: MutableMap<Long, Vertex> = initEdges(graph, current)
         for (edge in edges.values) {
@@ -86,15 +124,26 @@ object GraphAlgorithm {
             }
         }
         stackOfVertexes.add(current)
-        addState(current, action=Actions.ADDED_TO_STACK, protocol=protocol)
+        addState(current, action = Actions.ADDED_TO_STACK, protocol = protocol)
     }
 
     fun TopSortActions(graph: Graph): Pair<Map<Vertex, Int>, ArrayList<State>> {
         val stackOfVertexes: Stack<Vertex> = Stack()
         val protocol: ArrayList<State> = arrayListOf()
         val vertexes = graph.getVertexes()
-        val visited: ArrayList<Vertex> = arrayListOf()
         startTime = setStartAlgoTime()
+        var visited: ArrayList<Vertex> = arrayListOf()
+        val checkList: ArrayList<Boolean> = arrayListOf()
+        for (vertex in vertexes) {
+            if (vertex !in visited) {
+                checkGraphForCycle(graph, vertex, visited, checkList)
+            }
+        }
+        if (false in checkList) return Pair(
+            mapOf(),
+            arrayListOf(State(getCurrentTime(), "Cycle was found, create another graph", 0))
+        )
+        visited = arrayListOf()
         for (vertex in vertexes) {
             if (vertex !in visited) {
                 TopSortUtilActions(graph, vertex, visited, stackOfVertexes, protocol)
@@ -105,7 +154,7 @@ object GraphAlgorithm {
         while (stackOfVertexes.isNotEmpty()) {
             val current = stackOfVertexes.pop()
             result[current] = order++
-            addState(current, action=Actions.GET_ORDER, protocol=protocol)
+            addState(current, action = Actions.GET_ORDER, protocol = protocol)
         }
         return Pair(result, protocol)
     }
