@@ -6,13 +6,13 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import data.graphData.DataGraphLocator
-import utils.EditorState
+import utils.GraphToolsState
 import kotlinx.coroutines.flow.MutableStateFlow
 import utils.algorithm.Algorithm
 import utils.algorithm.AlgorithmState
 
 class MainScreenViewModel {
-    val editorState: MutableStateFlow<EditorState> = MutableStateFlow(EditorState.WAITING)
+    val graphToolsState: MutableStateFlow<GraphToolsState> = MutableStateFlow(GraphToolsState.WAITING)
     val currentAlgorithm: MutableStateFlow<Pair<Algorithm, AlgorithmState>> = MutableStateFlow(
         Pair(Algorithm.NONE, AlgorithmState.NONE))
 

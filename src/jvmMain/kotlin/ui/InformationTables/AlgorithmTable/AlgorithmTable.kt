@@ -21,13 +21,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import models.interactor.AlgorithmTableInteractorImpl
 import ui.InformationTables.TableItem
 import utils.algorithm.Algorithm
-import utils.EditorState
+import utils.GraphToolsState
 import utils.algorithm.AlgorithmState
 
 @Composable
 @Preview
 fun AlgorithmTable(
-    editorStateFlow: MutableStateFlow<EditorState>,
+    graphToolsStateFlow: MutableStateFlow<GraphToolsState>,
     currentAlgorithm: MutableStateFlow<Pair<Algorithm, AlgorithmState>>,
     modifier: Modifier = Modifier
 ) {

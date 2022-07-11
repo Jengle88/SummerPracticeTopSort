@@ -5,23 +5,24 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import utils.EditorState
+import utils.GraphToolsState
 
 class UserActionHintViewModel(
 ) {
-    private fun getTitle(editorState: EditorState): String =
-        "Пояснение: " + when (editorState) {
-            EditorState.WAITING -> "режим ожидания"
-            EditorState.SET_VERTEX -> "добавление вершины"
-            EditorState.REMOVE_VERTEX -> "удаление вершины"
-            EditorState.SET_EDGE_FIRST -> "выбор вершины, откуда будет выходить ребро"
-            EditorState.SET_EDGE_SECOND -> "выбор вершины, куда будет входить ребро"
-            EditorState.REMOVE_EDGE_FIRST -> "удаление ребра, выбор первой вершины"
-            EditorState.REMOVE_EDGE_SECOND -> "удаление ребра, выбор второй вершины"
+    private fun getTitle(graphToolsState: GraphToolsState): String =
+        when (graphToolsState) {
+            GraphToolsState.WAITING -> "Пояснение: режим ожидания"
+            GraphToolsState.SET_VERTEX -> "Пояснение: добавление вершины"
+            GraphToolsState.REMOVE_VERTEX -> "Пояснение: удаление вершины"
+            GraphToolsState.SET_EDGE_FIRST -> "Пояснение: выбор вершины, откуда будет выходить ребро"
+            GraphToolsState.SET_EDGE_SECOND -> "Пояснение: выбор вершины, куда будет входить ребро"
+            GraphToolsState.REMOVE_EDGE_FIRST -> "Пояснение: удаление ребра, выбор первой вершины"
+            GraphToolsState.REMOVE_EDGE_SECOND -> "Пояснение: удаление ребра, выбор второй вершины"
+            else -> ""
         }
-    fun subscribeTitleToEditorState(title: MutableState<String>, editorStateFlow: MutableStateFlow<EditorState>) {
+    fun subscribeTitleToEditorState(title: MutableState<String>, graphToolsStateFlow: MutableStateFlow<GraphToolsState>) {
         CoroutineScope(Dispatchers.Main).launch {
-            editorStateFlow.collect { state ->
+            graphToolsStateFlow.collect { state ->
                 title.value = getTitle(state)
             }
         }

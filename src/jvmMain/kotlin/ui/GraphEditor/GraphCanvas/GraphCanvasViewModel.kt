@@ -14,11 +14,11 @@ import models.mapper.toVertexVO
 import org.jetbrains.skia.Font
 import org.jetbrains.skia.Point
 import utils.CanvasDrawLib
-import utils.EditorState
+import utils.GraphToolsState
 import utils.getDistTo
 
 class GraphCanvasViewModel(
-    private val editorStateFlow: MutableStateFlow<EditorState>,
+    private val graphToolsStateFlow: MutableStateFlow<GraphToolsState>,
     private val graphEditorInteractor: GraphEditorInteractor,
     private val graphVertex: SnapshotStateList<VertexVO>
 ) {
@@ -46,7 +46,7 @@ class GraphCanvasViewModel(
 
     private fun editorStateListener() {
         CoroutineScope(Dispatchers.Main).launch {
-            editorStateFlow.collectLatest { state ->
+            graphToolsStateFlow.collectLatest { state ->
                 if ("_SECOND" !in state.name) {
                     firstVertexForEdge?.color = Color.Black
                     firstVertexForEdge = null
@@ -76,26 +76,26 @@ class GraphCanvasViewModel(
         width: Int
     ) {
         rememberPoint(point)
-        when (editorStateFlow.value) {
-            EditorState.SET_VERTEX -> {
+        when (graphToolsStateFlow.value) {
+            GraphToolsState.SET_VERTEX -> {
                 firstVertexForEdge = null
                 addVertexAlertDialogState.value = true
                 addVertexToCanvas(height, width)
             }
-            EditorState.REMOVE_VERTEX -> {
+            GraphToolsState.REMOVE_VERTEX -> {
                 firstVertexForEdge = null
                 removeVertexFromCanvas(lastPoint)
             }
-            EditorState.SET_EDGE_FIRST -> {
+            GraphToolsState.SET_EDGE_FIRST -> {
                 setFirstEdgePointAdd(lastPoint)
             }
-            EditorState.SET_EDGE_SECOND -> {
+            GraphToolsState.SET_EDGE_SECOND -> {
                 setSecondEdgePointForAdd(lastPoint)
             }
-            EditorState.REMOVE_EDGE_FIRST -> {
+            GraphToolsState.REMOVE_EDGE_FIRST -> {
                 setFirstEdgePointForRemove(lastPoint)
             }
-            EditorState.REMOVE_EDGE_SECOND -> {
+            GraphToolsState.REMOVE_EDGE_SECOND -> {
                 setSecondEdgePointForRemove(lastPoint)
             }
             else -> {}
@@ -109,7 +109,7 @@ class GraphCanvasViewModel(
             graphVertex.find { it.center.getDistTo(point) <= VertexVO.radius }
         if (firstVertexForEdge != null) {
             firstVertexForEdge?.color = Color.Yellow
-            editorStateFlow.value = EditorState.SET_EDGE_SECOND
+            graphToolsStateFlow.value = GraphToolsState.SET_EDGE_SECOND
         }
     }
 
@@ -121,7 +121,7 @@ class GraphCanvasViewModel(
                 firstVertexForEdge!!.id,
                 secondVertex.id
             )
-            editorStateFlow.value = EditorState.SET_EDGE_FIRST
+            graphToolsStateFlow.value = GraphToolsState.SET_EDGE_FIRST
             // уведомляем об изменении графа
             graphVertex[graphVertex.lastIndex] = graphVertex.last()
             firstVertexForEdge?.color = Color.Black
@@ -134,7 +134,7 @@ class GraphCanvasViewModel(
             graphVertex.find { it.center.getDistTo(point) <= VertexVO.radius }
         if (firstVertexForEdge != null) {
             firstVertexForEdge?.color = Color.Red
-            editorStateFlow.value = EditorState.REMOVE_EDGE_SECOND
+            graphToolsStateFlow.value = GraphToolsState.REMOVE_EDGE_SECOND
         }
     }
 
@@ -146,7 +146,7 @@ class GraphCanvasViewModel(
                 firstVertexForEdge!!.id,
                 secondVertex.id
             )
-            editorStateFlow.value = EditorState.REMOVE_EDGE_FIRST
+            graphToolsStateFlow.value = GraphToolsState.REMOVE_EDGE_FIRST
             // уведомляем об изменении графа
             graphVertex[graphVertex.lastIndex] = graphVertex.last()
             firstVertexForEdge?.color = Color.Black

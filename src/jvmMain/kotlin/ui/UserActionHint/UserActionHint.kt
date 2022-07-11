@@ -9,18 +9,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import utils.EditorState
+import utils.GraphToolsState
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 @Preview
 fun UserActionHint(
-    editorStateFlow: MutableStateFlow<EditorState>,
+    graphToolsStateFlow: MutableStateFlow<GraphToolsState>,
     modifier: Modifier = Modifier
 ) {
     val title = remember { mutableStateOf("") }
     val userActionHintViewModel = remember { mutableStateOf(UserActionHintViewModel()) }
-    userActionHintViewModel.value.subscribeTitleToEditorState(title, editorStateFlow)
+    userActionHintViewModel.value.subscribeTitleToEditorState(title, graphToolsStateFlow)
 
     Text(
         text = title.value,

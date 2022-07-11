@@ -11,7 +11,7 @@ import data.repositoryImpl.GraphEditorRepositoryImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import models.interactor.GraphEditorInteractorImpl
 import ui.GraphEditor.AddVertexAlertDialog
-import utils.EditorState
+import utils.GraphToolsState
 import utils.toPoint
 
 
@@ -19,12 +19,12 @@ import utils.toPoint
 @Preview
 fun GraphCanvas(
     modifier: Modifier = Modifier,
-    editorStateFlow: MutableStateFlow<EditorState>
+    graphToolsStateFlow: MutableStateFlow<GraphToolsState>
 ) {
     val graph = remember { mutableStateListOf<VertexVO>() }
     val graphCanvasViewModel = remember {
         GraphCanvasViewModel(
-            editorStateFlow,
+            graphToolsStateFlow,
             GraphEditorInteractorImpl(GraphEditorRepositoryImpl(DataGraphLocator.graphFlow)),
             graph
         )
