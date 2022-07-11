@@ -141,7 +141,6 @@ object GraphAlgorithm {
                 checkGraphForCycle(graph, vertex, visited, checkList)
             }
         }
-        println(checkList)
         if (false in checkList) return Pair(
             mapOf(),
             arrayListOf(State(getCurrentTime(), "Cycle was found, create another graph", 0))
@@ -163,13 +162,4 @@ object GraphAlgorithm {
     }
 
     private fun setStartAlgoTime() = currentNanoTime() / 1000000
-}
-
-fun main() {
-    val vertex1 = Vertex(0, "A", Point(0.0f, 0.0f), 0, arrayListOf(1))
-    val vertex2 = Vertex(1, "B", Point(0.0f, 0.0f), 0, arrayListOf(2))
-    val vertex3 = Vertex(2, "C", Point(0.0f, 0.0f), 0, arrayListOf(3))
-    val vertex4 = Vertex(3, "D", Point(0.0f, 0.0f), 0, arrayListOf())
-    val graph = Graph(arrayListOf(vertex1, vertex2, vertex3, vertex4))
-    println(GraphAlgorithm.TopSortActions(graph).first)
 }

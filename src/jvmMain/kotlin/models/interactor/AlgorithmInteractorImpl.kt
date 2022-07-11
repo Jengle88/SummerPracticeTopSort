@@ -12,9 +12,11 @@ class AlgorithmInteractorImpl(private val graphFlow: MutableStateFlow<Graph>):
         for ((vertex, order) in topSortResult) {
             vertex.order = order
         }
-        AlgorithmVisualiser.loadResult(
-            topSortResult = topSortResult,
-            protocol = protocol
-        )
+        if(protocol.isNotEmpty()) {
+            AlgorithmVisualiser.loadResult(
+                topSortResult = topSortResult,
+                protocol = protocol
+            )
+        }
     }
 }
