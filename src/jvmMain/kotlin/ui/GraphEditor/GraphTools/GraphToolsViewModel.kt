@@ -62,41 +62,61 @@ class GraphToolsViewModel(
     fun pauseTap() {
         graphToolsStateFlow.value = GraphToolsState.PAUSE
         currentAlgorithm.value = Pair(currentAlgorithm.value.first, AlgorithmState.PAUSE)
+        AlgorithmVisualiser.pauseVisualise()
     }
 
     fun continueTap() {
         graphToolsStateFlow.value = GraphToolsState.CONTINUE
         currentAlgorithm.value = Pair(currentAlgorithm.value.first, AlgorithmState.IN_PROGRESS_AUTO)
-        if ("IN_PROGRESS" in AlgorithmVisualiser.algorithmState.name)
-            AlgorithmVisualiser.finishVisualise()
-        else {
-            // TODO: 11.07.2022 возобновить работу
-        }
+        AlgorithmVisualiser.pauseVisualise()
+        AlgorithmVisualiser.startVisualiseTopSortAlgorithm(AlgorithmVisualiser.defaultPeriod)
+    }
+
+    fun finishOfVisualisation() {
+        graphToolsStateFlow.value = GraphToolsState.TO_FINISH
+        AlgorithmVisualiser.toFinish()
+    }
+
+    fun beginOfVisualisation() {
+        graphToolsStateFlow.value = GraphToolsState.TO_BEGIN
+        AlgorithmVisualiser.toBegin()
     }
 
     fun stepBackTap() {
         graphToolsStateFlow.value = GraphToolsState.STEP_BACK
         currentAlgorithm.value = Pair(currentAlgorithm.value.first, AlgorithmState.IN_PROGRESS_USER)
+        AlgorithmVisualiser.pauseVisualise()
         AlgorithmVisualiser.stepBack()
     }
 
     fun stepNextTap() {
         graphToolsStateFlow.value = GraphToolsState.STEP_NEXT
         currentAlgorithm.value = Pair(currentAlgorithm.value.first, AlgorithmState.IN_PROGRESS_USER)
+        AlgorithmVisualiser.pauseVisualise()
+        AlgorithmVisualiser.algorithmState = AlgorithmState.IN_PROGRESS_USER
         AlgorithmVisualiser.stepNext()
     }
 
     fun algTopSortTap() {
-//        enableGraphButtons.value = false
-        currentAlgorithm.value = Pair(Algorithm.ALG_TOP_SORT, AlgorithmState.START)
-        algorithmInteractorImpl.doTopSortAlgorithm()
-        currentAlgorithm.value = Pair(Algorithm.ALG_TOP_SORT, AlgorithmState.FINISH)
-        notifyAutoProcessingAlgorithm()
+        if (!enableGraphButtons.value) {
+            enableGraphButtons.value = true
+            AlgorithmVisualiser.stopVisualise()
+        } else {
+            enableGraphButtons.value = false
+            AlgorithmVisualiser.pauseVisualise()
+            currentAlgorithm.value = Pair(Algorithm.ALG_TOP_SORT, AlgorithmState.START)
+            algorithmInteractorImpl.doTopSortAlgorithm()
+            currentAlgorithm.value = Pair(Algorithm.ALG_TOP_SORT, AlgorithmState.FINISH)
+            AlgorithmVisualiser.startVisualiseTopSortAlgorithm(AlgorithmVisualiser.defaultPeriod)
+            notifyAutoProcessingAlgorithm()
+        }
     }
 
     private fun notifyAutoProcessingAlgorithm() {
         currentAlgorithm.value =
             Pair(Algorithm.ALG_TOP_SORT, AlgorithmState.IN_PROGRESS_AUTO)
     }
+
+
 
 }

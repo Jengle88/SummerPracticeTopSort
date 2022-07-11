@@ -10,7 +10,8 @@ enum class GraphToolsState {
     REMOVE_EDGE_SECOND,
     PAUSE,
     CONTINUE,
+    TO_BEGIN,
+    TO_FINISH,
     STEP_BACK,
     STEP_NEXT
-    // TODO: 06.07.2022 Продолжить список состояний
 }

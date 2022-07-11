@@ -10,6 +10,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.SkipNext
+import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -176,6 +178,36 @@ fun AlgorithmPanel(
         ) {
             Icon(
                 imageVector = Icons.Default.PlayArrow,
+                contentDescription = null
+            )
+        }
+    }
+    Row(
+        modifier = rowButtonsModifier
+            .padding(bottom = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Button(
+            modifier = buttonModifier,
+            enabled = enableAlgorithmButtons.value,
+            onClick = {
+                graphToolsViewModel.beginOfVisualisation()
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Default.SkipPrevious,
+                contentDescription = null
+            )
+        }
+        Button(
+            modifier = buttonModifier,
+            enabled = enableAlgorithmButtons.value,
+            onClick = {
+                graphToolsViewModel.finishOfVisualisation()
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Default.SkipNext,
                 contentDescription = null
             )
         }
