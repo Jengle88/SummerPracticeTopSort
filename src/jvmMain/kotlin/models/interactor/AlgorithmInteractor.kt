@@ -14,5 +14,6 @@ class AlgorithmInteractorImpl(private val graphFlow: MutableStateFlow<Graph>): A
         for ((vertex, order) in topSortResult) {
             vertex.order = order
         }
+        // TODO: 11.07.2022 Передача информации в AlgorVisualise
     }
 }
