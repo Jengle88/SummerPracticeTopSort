@@ -7,8 +7,7 @@ import kotlin.collections.ArrayList
 
 object GraphAlgorithm {
 
-<<<<<<< Updated upstream
-=======
+
     private fun addState(srcVertex: Vertex, dstVertex: Vertex? = null, action: Actions,
                          protocol: ArrayList<State>) {
         when (action) {
@@ -50,7 +49,6 @@ object GraphAlgorithm {
         checkList.add(true)
     }
 
->>>>>>> Stashed changes
     private fun initEdges(graph: Graph, current: Vertex): MutableMap<Long, Vertex> {
         val vertexes = graph.getVertexes()
         val edges: MutableMap<Long, Vertex> = mutableMapOf()
@@ -96,8 +94,7 @@ object GraphAlgorithm {
         }
         return result
     }
-<<<<<<< Updated upstream
-=======
+
 
     private fun TopSortUtilActions(graph: Graph, current: Vertex, visited: ArrayList<Vertex>,
                                    stackOfVertexes: Stack<Vertex>, protocol: ArrayList<State>) {
@@ -140,6 +137,4 @@ object GraphAlgorithm {
         }
         return Pair(result, protocol)
     }
->>>>>>> Stashed changes
-}
 
