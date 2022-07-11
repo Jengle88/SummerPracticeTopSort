@@ -7,6 +7,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 import actions.Actions
 import actions.State.State
+import org.jetbrains.skia.Point
+
 
 object GraphAlgorithm {
 
@@ -52,16 +54,19 @@ object GraphAlgorithm {
         current: Vertex,
         visited: ArrayList<Vertex>,
         checkList: ArrayList<Boolean>
-    ) {
+    )
+    {
         visited.add(current)
         val edges = initEdges(graph, current)
         for (edge in edges.values) {
             if (edge !in visited) {
                 checkGraphForCycle(graph, edge, visited, checkList)
-            } else {
+            }
+            else {
                 checkList.add(false)
             }
         }
+        visited.remove(current)
         checkList.add(true)
     }
 
@@ -115,7 +120,8 @@ object GraphAlgorithm {
     private fun TopSortUtilActions(
         graph: Graph, current: Vertex, visited: ArrayList<Vertex>,
         stackOfVertexes: Stack<Vertex>, protocol: ArrayList<State>
-    ) {
+    )
+    {
         visited.add(current)
         val edges: MutableMap<Long, Vertex> = initEdges(graph, current)
         for (edge in edges.values) {
@@ -139,6 +145,7 @@ object GraphAlgorithm {
                 checkGraphForCycle(graph, vertex, visited, checkList)
             }
         }
+        println(checkList)
         if (false in checkList) return Pair(
             mapOf(),
             arrayListOf(State(getCurrentTime(), "Cycle was found, create another graph", 0))
@@ -159,4 +166,13 @@ object GraphAlgorithm {
         return Pair(result, protocol)
     }
 
+}
+
+fun main() {
+    val vertex1 = Vertex(0, "A", Point(0.0f, 0.0f), 0, arrayListOf(1))
+    val vertex2 = Vertex(1, "B", Point(0.0f, 0.0f), 0, arrayListOf(2))
+    val vertex3 = Vertex(2, "C", Point(0.0f, 0.0f), 0, arrayListOf(3))
+    val vertex4 = Vertex(3, "D", Point(0.0f, 0.0f), 0, arrayListOf())
+    val graph = Graph(arrayListOf(vertex1, vertex2, vertex3, vertex4))
+    println(GraphAlgorithm.TopSortActions(graph).first)
 }
