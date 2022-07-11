@@ -19,9 +19,8 @@ class ActionTableViewModel(
             currentAlgorithm.collect { data ->
                 when(data.first) {
                     Algorithm.ALG_TOP_SORT -> {
-                        if (data.second == AlgorithmState.IN_PROGRESS_AUTO) { // Или лучше AlgorithmState.FINISH?
+                        if (data.second == AlgorithmState.IN_PROGRESS_AUTO) {
                             actionTableInteractor.updateGraphTopSortInfo(actionTableState)
-//                            currentAlgorithm.value = Pair(Algorithm.NONE, AlgorithmState.NONE)
                         }
                     }
                     else -> {}

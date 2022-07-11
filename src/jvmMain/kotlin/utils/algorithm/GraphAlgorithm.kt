@@ -2,14 +2,14 @@ package utils.algorithm
 
 import data.`object`.Graph
 import data.`object`.Vertex
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import actions.Actions
-import actions.State.State
+import utils.actions.Actions
+import utils.actions.State.State
+import org.jetbrains.skiko.currentNanoTime
 
 object GraphAlgorithm {
-
+    private var startTime = 0L
     private fun addState(srcVertex: Vertex, dstVertex: Vertex? = null, action: Actions,
                          protocol: ArrayList<State>) {
         when (action) {
@@ -34,7 +34,7 @@ object GraphAlgorithm {
     }
 
     private fun getCurrentTime(): String {
-        return SimpleDateFormat("dd/M/yyyy hh:mm:ss").format(Date())
+        return (currentNanoTime() / 1000000 - startTime).toString()
     }
 
     private fun initEdges(graph: Graph, current: Vertex): MutableMap<Long, Vertex> {
@@ -94,6 +94,7 @@ object GraphAlgorithm {
         val protocol: ArrayList<State> = arrayListOf()
         val vertexes = graph.getVertexes()
         val visited: ArrayList<Vertex> = arrayListOf()
+        startTime = setStartAlgoTime()
         for (vertex in vertexes) {
             if (vertex !in visited) {
                 TopSortUtilActions(graph, vertex, visited, stackOfVertexes, protocol)
@@ -108,4 +109,6 @@ object GraphAlgorithm {
         }
         return Pair(result, protocol)
     }
+
+    private fun setStartAlgoTime() = currentNanoTime() / 1000000
 }

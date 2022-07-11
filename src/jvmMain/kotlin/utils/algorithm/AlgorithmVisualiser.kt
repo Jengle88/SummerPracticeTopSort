@@ -1,6 +1,6 @@
 package utils.algorithm
 
-import actions.State.State
+import utils.actions.State.State
 import androidx.compose.ui.graphics.Color
 import data.`object`.Vertex
 import kotlinx.coroutines.*
@@ -93,7 +93,7 @@ object AlgorithmVisualiser {
         protocol: ArrayList<State>
     ) {
         algorithmProtocol = AlgorithmProtocol(
-            listOfActions = protocol.mapIndexed { index, state -> Pair("$index) time: ${state.time}", state.action) }
+            listOfActions = protocol.mapIndexed { index, state -> Pair("$index) time: ${state.time} ms", state.action) }
         )
         resultTableData.value = topSortResult.map { result -> Pair(result.key, result.value) }
         var index = 0
