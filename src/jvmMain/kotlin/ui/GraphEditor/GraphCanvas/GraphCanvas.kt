@@ -11,6 +11,7 @@ import data.repositoryImpl.GraphEditorRepositoryImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import models.interactor.GraphEditorInteractorImpl
 import ui.GraphEditor.AddVertexAlertDialog.AddVertexAlertDialog
+import ui.GraphEditor.ShowVertexNameDialog.ShowVertexNameDialogState
 import utils.GraphToolsState
 import utils.toPoint
 
@@ -29,18 +30,29 @@ fun GraphCanvas(
             graph
         )
     }
+    val vertexNameForAlertDialog = remember { mutableStateOf("") }
     val addVertexAlertDialogState = AddVertexAlertDialog(graphCanvasViewModel.vertexNameFlow)
+    val showVertexNameDialogState = ShowVertexNameDialogState(vertexNameForAlertDialog)
     Canvas(
         modifier = modifier
             .pointerInput(Unit) {
-                this.detectTapGestures(onTap = { offset ->
-                    graphCanvasViewModel.selectPoint(
-                        addVertexAlertDialogState,
-                        offset.toPoint(),
-                        this.size.height,
-                        this.size.width
-                    )
-                })
+                this.detectTapGestures(
+                    onTap = { offset ->
+                        graphCanvasViewModel.selectPoint(
+                            addVertexAlertDialogState,
+                            offset.toPoint(),
+                            this.size.height,
+                            this.size.width
+                        )
+                    },
+                    onLongPress = { offset ->
+                        graphCanvasViewModel.showVertexName(
+                            offset.toPoint(),
+                            vertexNameForAlertDialog,
+                            showVertexNameDialogState
+                        )
+                    }
+                )
             }
     ) {
         graphCanvasViewModel.drawGraph(this.drawContext.canvas, graph.toList())

@@ -20,8 +20,9 @@ object CanvasDrawLib {
                 this.style = PaintingStyle.Stroke
             }
         )
-        val offset = getTextOffset(font, vertex.name)
-        drawVertexTitle(canvas, vertex, offset, font)
+        val title = if(vertex.name.length > VertexVO.cntLetters) vertex.name.substring(0, VertexVO.cntLetters) + "…" else vertex.name
+        val offset = getTextOffset(font, title)
+        drawVertexTitle(canvas, title, vertex, offset, font)
     }
 
     fun drawEdge(canvas: Canvas, point1: Point?, point2: Point?) {
@@ -122,12 +123,13 @@ object CanvasDrawLib {
 
     private fun drawVertexTitle(
         canvas: Canvas,
+        title: String,
         vertex: VertexVO,
         offset: Int,
         font: Font
     ) {
         canvas.nativeCanvas.drawString(
-            s = vertex.name,
+            s = title,
             x = vertex.center.x - offset,
             y = vertex.center.y + 5f,
             paint = org.jetbrains.skia.Paint().apply {

@@ -24,7 +24,7 @@ class GraphCanvasViewModel(
     private val graphVertex: SnapshotStateList<VertexVO>
 ) {
     private val font = Font().apply {
-        size = 15f
+        size = 12f
     }
     // изменение вариации вершины перед нанесением на холст
     private var postProcessingVertexBeforeDraw: MutableMap<Long, (VertexVO) -> VertexVO > = mutableMapOf()
@@ -238,5 +238,17 @@ class GraphCanvasViewModel(
 
     private fun rememberPoint(point: Point) {
         lastPoint = point
+    }
+
+    fun showVertexName(
+        point: Point,
+        vertexNameForAlertDialog: MutableState<String>,
+        showVertexNameDialogState: MutableState<Boolean>
+    ) {
+        val vertex = graphVertex.find { it.center.getDistTo(point) <= VertexVO.radius }
+        if (vertex != null ){
+            vertexNameForAlertDialog.value = vertex.name
+            showVertexNameDialogState.value = true
+        }
     }
 }
