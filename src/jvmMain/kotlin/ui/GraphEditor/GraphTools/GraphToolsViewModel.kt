@@ -79,9 +79,16 @@ class GraphToolsViewModel(
     }
 
     fun algTopSortTap() {
+//        enableGraphButtons.value = false
         currentAlgorithm.value = Pair(Algorithm.ALG_TOP_SORT, AlgorithmState.START)
-        algorithmInteractorImpl.startTopSortAlgorithm()
-        currentAlgorithm.value = Pair(Algorithm.ALG_TOP_SORT, AlgorithmState.IN_PROGRESS_AUTO)
+        algorithmInteractorImpl.doTopSortAlgorithm()
+        currentAlgorithm.value = Pair(Algorithm.ALG_TOP_SORT, AlgorithmState.FINISH)
+        notifyAutoProcessingAlgorithm()
+    }
+
+    private fun notifyAutoProcessingAlgorithm() {
+        currentAlgorithm.value =
+            Pair(Algorithm.ALG_TOP_SORT, AlgorithmState.IN_PROGRESS_AUTO)
     }
 
 }

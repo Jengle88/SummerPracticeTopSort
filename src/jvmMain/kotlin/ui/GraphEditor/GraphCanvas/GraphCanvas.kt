@@ -10,7 +10,7 @@ import data.graphData.DataGraphLocator
 import data.repositoryImpl.GraphEditorRepositoryImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import models.interactor.GraphEditorInteractorImpl
-import ui.GraphEditor.AddVertexAlertDialog
+import ui.GraphEditor.AddVertexAlertDialog.AddVertexAlertDialog
 import utils.GraphToolsState
 import utils.toPoint
 

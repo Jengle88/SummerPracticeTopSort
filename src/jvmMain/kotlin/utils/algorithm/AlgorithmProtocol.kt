@@ -11,9 +11,7 @@ data class AlgorithmProtocol(
     fun getListActions(range: IntRange = listOfActions.indices): List<Pair<String, String>> {
         val listActions = mutableListOf<Pair<String, String>>()
         for (index in range) {
-            listActions.add(
-                "$index) time = ${listOfActions[index].first}ms" to listOfActions[index].second
-            )
+            listActions.add(listOfActions[index])
         }
         return listActions
     }

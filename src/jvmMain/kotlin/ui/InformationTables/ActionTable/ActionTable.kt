@@ -7,20 +7,39 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.flow.MutableStateFlow
+import models.interactor.ActionTableInteractorImpl
 import ui.InformationTables.TableItem
+import utils.algorithm.Algorithm
+import utils.algorithm.AlgorithmState
 
 
 @Composable
-fun ActionTable(modifier: Modifier = Modifier) {
+fun ActionTable(
+    currentAlgorithm: MutableStateFlow<Pair<Algorithm, AlgorithmState>>,
+    modifier: Modifier = Modifier
+) {
     val lazyColumnState = rememberLazyListState(
         initialFirstVisibleItemIndex = 0
     )
+    val mapOfActions = remember { mutableStateOf(mapOf<String, String>()) }
+    val actionTableViewModel = remember {
+        mutableStateOf(
+            ActionTableViewModel(
+                ActionTableInteractorImpl(),
+                currentAlgorithm,
+                mapOfActions
+            )
+        )
+    }
     val timeCardWeight = 40f
     val actionCardWeight = 100f
 
@@ -55,11 +74,12 @@ fun ActionTable(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .padding(end = 12.dp)
             ) {
-                for (i in 1..30) {
+                actionTableViewModel.value.fillTable()
+                for ((time, action) in mapOfActions.value) {
                     item {
                         TableItem(
-                            "time: $i ms",
-                            "result: ${i+5} action",
+                            time,
+                            action,
                             timeCardWeight,
                             actionCardWeight
                         )

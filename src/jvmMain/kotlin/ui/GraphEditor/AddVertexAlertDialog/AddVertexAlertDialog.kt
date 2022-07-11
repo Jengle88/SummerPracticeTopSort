@@ -1,4 +1,4 @@
-package ui.GraphEditor
+package ui.GraphEditor.AddVertexAlertDialog
 
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material.AlertDialog

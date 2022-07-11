@@ -26,7 +26,6 @@ fun InformationTables(
         modifier = modifier
     ) {
         AlgorithmTable(
-            graphToolsStateFlow = graphToolsStateFlow,
             currentAlgorithm = currentAlgorithm,
             modifier = Modifier
                 .weight(45f)
@@ -34,8 +33,10 @@ fun InformationTables(
         Spacer(Modifier
             .width(16.dp)
         )
-        ActionTable(Modifier
-            .weight(100f)
+        ActionTable(
+            currentAlgorithm = currentAlgorithm,
+            modifier = Modifier
+                .weight(100f)
         )
     }
 }
