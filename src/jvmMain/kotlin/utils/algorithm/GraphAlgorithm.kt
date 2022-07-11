@@ -2,10 +2,40 @@ package utils.algorithm
 
 import data.`object`.Graph
 import data.`object`.Vertex
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import actions.Actions
+import actions.State.State
 
 object GraphAlgorithm {
+
+    private fun addState(srcVertex: Vertex, dstVertex: Vertex? = null, action: Actions,
+                         protocol: ArrayList<State>) {
+        when (action) {
+            Actions.DOWN_TO_EDGE -> protocol.add(State(
+                getCurrentTime(),
+                "Down from vertex ${srcVertex.getName()} (id = ${srcVertex.getId()}) to ${dstVertex?.getName()} (id = ${dstVertex?.getId()})",
+                srcVertex.getId(),
+                dstVertex?.getId()))
+
+            Actions.GET_ORDER -> protocol.add(State(
+                getCurrentTime(),
+                "Vertex ${srcVertex.getName()} (id = ${srcVertex.getId()}) got order",
+                srcVertex.getId()
+            ))
+
+            Actions.ADDED_TO_STACK -> protocol.add(State(
+                getCurrentTime(),
+                "Vertex ${srcVertex.getName()} (id = ${srcVertex.getId()}) added to stack",
+                srcVertex.getId()
+            ))
+        }
+    }
+
+    private fun getCurrentTime(): String {
+        return SimpleDateFormat("dd/M/yyyy hh:mm:ss").format(Date())
+    }
 
     private fun initEdges(graph: Graph, current: Vertex): MutableMap<Long, Vertex> {
         val vertexes = graph.getVertexes()
@@ -44,5 +74,38 @@ object GraphAlgorithm {
         }
         return result
     }
-}
 
+    private fun TopSortUtilActions(graph: Graph, current: Vertex, visited: ArrayList<Vertex>,
+                                   stackOfVertexes: Stack<Vertex>, protocol: ArrayList<State>) {
+        visited.add(current)
+        val edges: MutableMap<Long, Vertex> = initEdges(graph, current)
+        for (edge in edges.values) {
+            if (edge !in visited) {
+                addState(current, edge, Actions.DOWN_TO_EDGE, protocol)
+                this.TopSortUtilActions(graph, edge, visited, stackOfVertexes, protocol)
+            }
+        }
+        stackOfVertexes.add(current)
+        addState(current, action=Actions.ADDED_TO_STACK, protocol=protocol)
+    }
+
+    fun TopSortActions(graph: Graph): Pair<Map<Vertex, Int>, ArrayList<State>> {
+        val stackOfVertexes: Stack<Vertex> = Stack()
+        val protocol: ArrayList<State> = arrayListOf()
+        val vertexes = graph.getVertexes()
+        val visited: ArrayList<Vertex> = arrayListOf()
+        for (vertex in vertexes) {
+            if (vertex !in visited) {
+                TopSortUtilActions(graph, vertex, visited, stackOfVertexes, protocol)
+            }
+        }
+        var order = 0
+        val result: MutableMap<Vertex, Int> = mutableMapOf()
+        while (stackOfVertexes.isNotEmpty()) {
+            val current = stackOfVertexes.pop()
+            result[current] = order++
+            addState(current, action=Actions.GET_ORDER, protocol=protocol)
+        }
+        return Pair(result, protocol)
+    }
+}
