@@ -12,6 +12,9 @@ object Parser {
         var graph = Graph(arrayListOf())
         val text = File(filePath).readText()
         graph = gson.fromJson(text, graph.javaClass)
+        if (graph.getVertexes() == null) {
+            graph = Graph(arrayListOf())
+        }
         return graph
     }
 
