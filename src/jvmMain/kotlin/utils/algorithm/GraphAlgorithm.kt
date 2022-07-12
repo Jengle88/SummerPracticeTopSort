@@ -47,7 +47,19 @@ object GraphAlgorithm {
         return (currentNanoTime() / 1000000 - startTime).toString()
     }
 
-    private fun checkGraphForCycle(
+    fun checkGraphForCycle(graph: Graph) : Boolean {
+        val vertexes = graph.getVertexes()
+        val visited: ArrayList<Vertex> = arrayListOf()
+        val checkList: ArrayList<Boolean> = arrayListOf()
+        for (vertex in vertexes) {
+            if (vertex !in visited) {
+                checkGraphForCycleUtil(graph, vertex, visited, checkList)
+            }
+        }
+        return (false in checkList)
+    }
+
+    private fun checkGraphForCycleUtil(
         graph: Graph,
         current: Vertex,
         visited: ArrayList<Vertex>,
@@ -57,7 +69,7 @@ object GraphAlgorithm {
         val edges = initEdges(graph, current)
         for (edge in edges.values) {
             if (edge !in visited) {
-                checkGraphForCycle(graph, edge, visited, checkList)
+                checkGraphForCycleUtil(graph, edge, visited, checkList)
             } else {
                 checkList.add(false)
             }
@@ -90,15 +102,8 @@ object GraphAlgorithm {
     fun TopSort(graph: Graph): Map<Vertex, Int> {
         val stackOfVertexes: Stack<Vertex> = Stack()
         val vertexes = graph.getVertexes()
-        var visited: ArrayList<Vertex> = arrayListOf()
-        val checkList: ArrayList<Boolean> = arrayListOf()
-        for (vertex in vertexes) {
-            if (vertex !in visited) {
-                checkGraphForCycle(graph, vertex, visited, checkList)
-            }
-        }
-        if (false in checkList) return mapOf()
-        visited = arrayListOf()
+        val visited: ArrayList<Vertex> = arrayListOf()
+        if (checkGraphForCycle(graph)) return mapOf()
         for (vertex in vertexes) {
             if (vertex !in visited) {
                 TopSortUtil(graph, vertex, visited, stackOfVertexes)
@@ -134,18 +139,11 @@ object GraphAlgorithm {
         val protocol: ArrayList<State> = arrayListOf()
         val vertexes = graph.getVertexes()
         startTime = setStartAlgoTime()
-        var visited: ArrayList<Vertex> = arrayListOf()
-        val checkList: ArrayList<Boolean> = arrayListOf()
-        for (vertex in vertexes) {
-            if (vertex !in visited) {
-                checkGraphForCycle(graph, vertex, visited, checkList)
-            }
-        }
-        if (false in checkList) return Pair(
+        val visited: ArrayList<Vertex> = arrayListOf()
+        if (checkGraphForCycle(graph)) return Pair(
             mapOf(),
             arrayListOf(State(getCurrentTime(), "Cycle was found, create another graph", 0))
         )
-        visited = arrayListOf()
         for (vertex in vertexes) {
             if (vertex !in visited) {
                 TopSortUtilActions(graph, vertex, visited, stackOfVertexes, protocol)
@@ -163,3 +161,4 @@ object GraphAlgorithm {
 
     private fun setStartAlgoTime() = currentNanoTime() / 1000000
 }
+

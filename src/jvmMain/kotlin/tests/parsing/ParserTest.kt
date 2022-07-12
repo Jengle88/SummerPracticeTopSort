@@ -29,9 +29,9 @@ internal class ParserTest {
     @Test
     fun usualLoadTest() {
         val filePath = "./src/jvmMain/kotlin/tests/parsing/loadTests/usualLoad.json"
-        val vertex1 = Vertex(0, "A", Point(10.0f, 15.0f), 0, arrayListOf(1, 3))
-        val vertex2 = Vertex(1, "B", Point(100.0f, 150.0f), 0, arrayListOf(2))
-        val vertex3 = Vertex(2, "C", Point(50.0f, 15.0f), 0, arrayListOf(3))
+        val vertex1 = Vertex(0, "A", Point(100.0f, 150.0f), 0, arrayListOf(1, 3))
+        val vertex2 = Vertex(1, "B", Point(1000.0f, 1500.0f), 0, arrayListOf(2))
+        val vertex3 = Vertex(2, "C", Point(50.0f, 105.0f), 0, arrayListOf(3))
         val vertex4 = Vertex(3, "D", Point(75.0f, 200.0f), 0, arrayListOf())
         val expected: Graph = Graph(arrayListOf(vertex1, vertex2, vertex3, vertex4))
         assertEquals(expected, Parser.readDataJSON(filePath))
@@ -62,5 +62,72 @@ internal class ParserTest {
         val vertex4 = Vertex(3, "D", Point(10.0f, 120.0f), 0, arrayListOf())
         val vertex5 = Vertex(4, "E", Point(180.0f, 220.0f), 0, arrayListOf())
         Parser.writeDataJSON("./src/jvmMain/kotlin/tests/parsing/saveTests/usualSave.json", Graph(arrayListOf(vertex1, vertex2, vertex3, vertex4, vertex5)))
+    }
+
+    // тестирование проверки данных на валидность
+
+    @Test
+    fun usualCheckTest() {
+        val vertex1 = Vertex(0, "A", Point(80.0f, 200.0f), 0, arrayListOf(0))
+        val vertex2 = Vertex(1, "B", Point(150.0f, 2000.0f), 0, arrayListOf(1))
+        val vertex3 = Vertex(2, "C", Point(150.0f, 250.0f), 0, arrayListOf(2))
+        val vertex4 = Vertex(3, "D", Point(100.0f, 220.0f), 0, arrayListOf(3))
+        val vertex5 = Vertex(4, "E", Point(180.0f, 220.0f), 0, arrayListOf())
+        val graph = Graph(arrayListOf(vertex1, vertex2, vertex3, vertex4, vertex5))
+
+        val expected = true
+        assertEquals(expected, Parser.checkGraphForValid(graph))
+    }
+
+    @Test
+    fun wrongIdCheckTest() {
+        val vertex1 = Vertex(0, "A", Point(10.0f, 20.0f), 0, arrayListOf(0))
+        val vertex2 = Vertex(1, "B", Point(100.0f, 200.0f), 0, arrayListOf(1))
+        val vertex3 = Vertex(1, "C", Point(150.0f, 250.0f), 0, arrayListOf(2))
+        val vertex4 = Vertex(3, "D", Point(10.0f, 120.0f), 0, arrayListOf(3))
+        val vertex5 = Vertex(4, "E", Point(180.0f, 220.0f), 0, arrayListOf())
+        val graph = Graph(arrayListOf(vertex1, vertex2, vertex3, vertex4, vertex5))
+
+        val expected = false
+        assertEquals(expected, Parser.checkGraphForValid(graph))
+    }
+
+    @Test
+    fun wrongEdgesCheckTest() {
+        val vertex1 = Vertex(0, "A", Point(100.0f, 200.0f), 0, arrayListOf(0, 2))
+        val vertex2 = Vertex(1, "B", Point(100.0f, 200.0f), 0, arrayListOf(1))
+        val vertex3 = Vertex(1, "C", Point(150.0f, 250.0f), 0, arrayListOf(2))
+        val vertex4 = Vertex(3, "D", Point(100.0f, 120.0f), 0, arrayListOf(3, 4))
+        val vertex5 = Vertex(4, "E", Point(180.0f, 220.0f), 0, arrayListOf(123321))
+        val graph = Graph(arrayListOf(vertex1, vertex2, vertex3, vertex4, vertex5))
+
+        val expected = false
+        assertEquals(expected, Parser.checkGraphForValid(graph))
+    }
+
+    @Test
+    fun wrongCenterCheckTest() {
+        val vertex1 = Vertex(0, "A", Point(10.0f, 20.0f), 0, arrayListOf(0, 2))
+        val vertex2 = Vertex(1, "B", Point(100.0f, 200.0f), 0, arrayListOf(1))
+        val vertex3 = Vertex(1, "C", Point(150.0f, 250.0f), 0, arrayListOf(2))
+        val vertex4 = Vertex(3, "D", Point(10.0f, 120.0f), 0, arrayListOf(3, 4))
+        val vertex5 = Vertex(4, "E", Point(180.0f, 220.0f), 0, arrayListOf())
+        val graph = Graph(arrayListOf(vertex1, vertex2, vertex3, vertex4, vertex5))
+
+        val expected = false
+        assertEquals(expected, Parser.checkGraphForValid(graph))
+    }
+
+    @Test
+    fun vertexAboveVertexCheckTest() {
+        val vertex1 = Vertex(0, "A", Point(90.0f, 200.0f), 0, arrayListOf(0, 2))
+        val vertex2 = Vertex(1, "B", Point(100.0f, 200.0f), 0, arrayListOf(1))
+        val vertex3 = Vertex(1, "C", Point(150.0f, 250.0f), 0, arrayListOf(2))
+        val vertex4 = Vertex(3, "D", Point(100.0f, 120.0f), 0, arrayListOf(3, 4))
+        val vertex5 = Vertex(4, "E", Point(180.0f, 220.0f), 0, arrayListOf())
+        val graph = Graph(arrayListOf(vertex1, vertex2, vertex3, vertex4, vertex5))
+
+        val expected = false
+        assertEquals(expected, Parser.checkGraphForValid(graph))
     }
 }
