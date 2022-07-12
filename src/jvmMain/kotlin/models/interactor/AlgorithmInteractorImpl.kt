@@ -6,7 +6,7 @@ import utils.algorithm.AlgorithmVisualiser
 import utils.algorithm.GraphAlgorithm
 
 class AlgorithmInteractorImpl(private val graphFlow: MutableStateFlow<Graph>):
-    TableInfoInteractor {
+    AlgorithmInteractor {
     override fun doTopSortAlgorithm() {
         val (topSortResult, protocol) = GraphAlgorithm.TopSortActions(graphFlow.value)
         for ((vertex, order) in topSortResult) {
