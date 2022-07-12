@@ -14,21 +14,21 @@ internal class ParserTest {
     // тестирование считывания
     @Test
     fun emptyLoadTest() {
-        val filePath = "./src/jvmMain/kotlin/tests/parsing/loadTests/emptyLoad.json"
+        val filePath = "./src/jvmTest/kotlin/parsing/loadTests/emptyLoad.json"
         val expected: Graph = Graph(arrayListOf())
         assertEquals(expected, Parser.readDataJSON(filePath))
     }
 
     @Test
     fun errorLoadTest() {
-        val filePath = "./src/jvmMain/kotlin/tests/parsing/loadTests/errorLoad.json"
+        val filePath = "./src/jvmTest/kotlin/parsing/loadTests/errorLoad.json"
         val expected: Graph = Graph(arrayListOf())
         assertEquals(expected, Parser.readDataJSON(filePath))
     }
 
     @Test
     fun usualLoadTest() {
-        val filePath = "./src/jvmMain/kotlin/tests/parsing/loadTests/usualLoad.json"
+        val filePath = "./src/jvmTest/kotlin/parsing/loadTests/usualLoad.json"
         val vertex1 = Vertex(0, "A", Point(100.0f, 150.0f), 0, arrayListOf(1, 3))
         val vertex2 = Vertex(1, "B", Point(1000.0f, 1500.0f), 0, arrayListOf(2))
         val vertex3 = Vertex(2, "C", Point(50.0f, 105.0f), 0, arrayListOf(3))
@@ -46,12 +46,12 @@ internal class ParserTest {
         val vertex3 = Vertex(2, "C", Point(150.0f, 250.0f), 0, arrayListOf(3, 4))
         val vertex4 = Vertex(3, "D", Point(10.0f, 120.0f), 0, arrayListOf(4))
         val vertex5 = Vertex(4, "E", Point(180.0f, 220.0f), 0, arrayListOf())
-        Parser.writeDataJSON("./src/jvmMain/kotlin/tests/parsing/saveTests/usualSave.json", Graph(arrayListOf(vertex1, vertex2, vertex3, vertex4, vertex5)))
+        Parser.writeDataJSON("./src/jvmTest/kotlin/parsing/saveTests/usualSave1.json", Graph(arrayListOf(vertex1, vertex2, vertex3, vertex4, vertex5)))
     }
 
     @Test
     fun emptySaveTest() {
-        Parser.writeDataJSON("./src/jvmMain/kotlin/tests/parsing/saveTests/emptySave.json", Graph(arrayListOf()))
+        Parser.writeDataJSON("./src/jvmTest/kotlin/parsing/saveTests/emptySave.json", Graph(arrayListOf()))
     }
 
     @Test
@@ -61,7 +61,7 @@ internal class ParserTest {
         val vertex3 = Vertex(2, "C", Point(150.0f, 250.0f), 0, arrayListOf())
         val vertex4 = Vertex(3, "D", Point(10.0f, 120.0f), 0, arrayListOf())
         val vertex5 = Vertex(4, "E", Point(180.0f, 220.0f), 0, arrayListOf())
-        Parser.writeDataJSON("./src/jvmMain/kotlin/tests/parsing/saveTests/usualSave.json", Graph(arrayListOf(vertex1, vertex2, vertex3, vertex4, vertex5)))
+        Parser.writeDataJSON("./src/jvmTest/kotlin/parsing/saveTests/usualSave2.json", Graph(arrayListOf(vertex1, vertex2, vertex3, vertex4, vertex5)))
     }
 
     // тестирование проверки данных на валидность

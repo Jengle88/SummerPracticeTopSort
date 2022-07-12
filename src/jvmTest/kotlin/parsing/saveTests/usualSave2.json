@@ -1,0 +1,1 @@
+{"vertexes":[{"id":0,"name":"A","center":{"x":10.0,"y":20.0},"order":0,"edges":[]},{"id":1,"name":"B","center":{"x":100.0,"y":200.0},"order":0,"edges":[]},{"id":2,"name":"C","center":{"x":150.0,"y":250.0},"order":0,"edges":[]},{"id":3,"name":"D","center":{"x":10.0,"y":120.0},"order":0,"edges":[]},{"id":4,"name":"E","center":{"x":180.0,"y":220.0},"order":0,"edges":[]}]}
