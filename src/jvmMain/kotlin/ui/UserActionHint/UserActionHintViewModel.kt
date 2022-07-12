@@ -17,10 +17,10 @@ class UserActionHintViewModel {
             GraphToolsState.SET_EDGE_SECOND -> "Пояснение: выбор вершины, куда будет входить ребро"
             GraphToolsState.REMOVE_EDGE_FIRST -> "Пояснение: удаление ребра, выбор первой вершины"
             GraphToolsState.REMOVE_EDGE_SECOND -> "Пояснение: удаление ребра, выбор второй вершины"
-            GraphToolsState.TO_BEGIN -> "Пояснение: перемотка в начало алгоритма"
-            GraphToolsState.TO_FINISH -> "Пояснение: перемотка в конец алгоритма"
-            GraphToolsState.CONTINUE -> "Пояснение: визуализация продолжается"
-            GraphToolsState.PAUSE -> "Пояснение: визуализация приостановлена"
+            GraphToolsState.TO_BEGIN -> "Пояснение: перемотка в начало алгоритма (для выхода нажмите кнопку выбранного алгоритма)"
+            GraphToolsState.TO_FINISH -> "Пояснение: перемотка в конец алгоритма (для выхода нажмите кнопку выбранного алгоритма)"
+            GraphToolsState.CONTINUE -> "Пояснение: визуализация продолжается (для выхода нажмите кнопку выбранного алгоритма)"
+            GraphToolsState.PAUSE -> "Пояснение: визуализация приостановлена (для выхода нажмите кнопку выбранного алгоритма)"
             else -> ""
         }
     fun subscribeTitleToEditorState(title: MutableState<String>, graphToolsStateFlow: MutableStateFlow<GraphToolsState>) {
