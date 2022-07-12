@@ -2,6 +2,36 @@
 Приложение для визуализации алгоритма топологической сортировки  
 Разработано в рамках летней практики ETU 2022
 
+### Команда
+_Evgeny Shkvirya_: Team-lead, UI, UI-logic, Program Architecture  
+_Anton Toropygin_: Algorithm, Testing, IO
+
+### Требования для запуска
+JDK 11
+
+### Запуск
+* **Создание JAR файла**:   (будет лежать в папке SummerPracticeTopSort/build/libs)
+```bash
+./gradlew buildFullJar
+```
+* **Запуск приложения из JAR файла**: (из папки SummerPracticeTopSort/build/libs)
+```bash
+java -jar SummerPracticeTopSort-1.0-SNAPSHOT-all.jar
+```
+* **Сборка + Запуск**:
+```bash
+./gradlew run
+```
+
+### Тестирование
+**Запуск тестов:**
+```bash
+ ./gradlew clean test
+```
+Результаты проверки будут загружены в директорию  
+SummerPracticeTopSort/build/test-results/jvmTest/
+
+
 ### RoadMap
 
 _Version 0.1_ (prototype):
@@ -37,42 +67,15 @@ _Version 0.6_
 * Исправление известных ошибок
 * Добавлена проверка данных, считываемых из файла
 * Добавлены тесты для алгоритмов на графе и работой с файлами
+
 =============================================================================
-
-### Требования для запуска
-  JDK 11
-
-### Команда
- _Evgeny Shkvirya_: Team-lead, UI, UI-logic, Program Architecture  
- _Anton Toropygin_: Algorithm, Testing, IO
-
-### Запуск
-* **Создание JAR файла**:   (будет лежать в папке SummerPracticeTopSort/build/libs)
-```bash
-./gradlew buildFullJar
-```
-* **Запуск приложения из JAR файла**: (из папки SummerPracticeTopSort/build/libs)
-```bash
-java -jar SummerPracticeTopSort-1.0-SNAPSHOT-all.jar
-```
-* **Сборка + Запуск**:
-```bash
-./gradlew run
-```
-
-### Тестирование
-**Запуск тестов:**
-```bash
- ./gradlew clean test
-```
-Результаты проверки будут загружены в директорию  
-SummerPracticeTopSort/build/test-results/jvmTest/
 
 ### В работе использовалось:
 Kotlin: 1.6.10  
 Jetpack Compose: 1.1.0  
 Kotlin Coroutines: 1.6.0  
 Gradle: 7.3.3-bin  
-Gson: 2.9.0
+Gson: 2.9.0  
+Junit: 5.8.2
 
 
