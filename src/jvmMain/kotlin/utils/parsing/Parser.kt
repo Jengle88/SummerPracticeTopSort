@@ -31,6 +31,7 @@ object Parser {
     }
 
     fun checkGraphForValid(graph: Graph) : Boolean {
+
         // проверка на одинаковые id
         if (!checkDifferentIds(graph.getVertexes())) return false
 
@@ -98,4 +99,6 @@ object Parser {
         }
         return centers
     }
+
+
 }
