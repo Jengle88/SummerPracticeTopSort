@@ -6,14 +6,15 @@ import utils.parsing.Parser
 
 object DataGraphLocator {
     val graphFlow = MutableStateFlow(Graph(arrayListOf()))
-    fun readGraphData(path: String) {
+    fun readGraphData(path: String): Boolean {
         lateinit var tempGraph: Graph
         try {
             tempGraph = Parser.readDataJSON(path)
         } catch (_: java.lang.Exception) {
-            return
+            return false
         }
         graphFlow.value = tempGraph
+        return true
     }
 
     fun saveGraphData(path: String) {

@@ -16,11 +16,24 @@ object Parser {
         var graph = Graph(arrayListOf())
         val text = File(filePath).readText()
         graph = gson.fromJson(text, graph.javaClass)
-        if (graph.getVertexes() == null) {
-            graph = Graph(arrayListOf())
-        }
-        if (!checkGraphForValid(graph)) return Graph(arrayListOf())
+        if (!checkValidVertexes(graph)) throw Exception()
+        if (!checkGraphForValid(graph)) throw Exception()
         return graph
+    }
+
+    private fun checkValidVertexes(graph: Graph?): Boolean {
+        if (graph?.getVertexes() == null) {
+            return false
+        }
+        for (vertex in graph.getVertexes()) {
+            if (vertex.getId() == null ||
+                    vertex.getName() == null ||
+                    vertex.getCenter() == null ||
+                    vertex.getEdges() == null) {
+                return false
+            }
+        }
+        return true
     }
 
     fun writeDataJSON(filePath: String, graph: Graph){
