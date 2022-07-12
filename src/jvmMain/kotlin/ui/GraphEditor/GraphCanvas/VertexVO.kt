@@ -9,7 +9,6 @@ data class VertexVO(
     val center: Point,
     var color: Color = Color.Black
 ) {
-
     companion object {
         const val radius = 25f
         const val cntLetters = 5
