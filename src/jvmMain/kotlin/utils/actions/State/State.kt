@@ -1,6 +1,6 @@
 package utils.actions.State
 
-class State(
+data class State(
     val time: String,
     val action: String,
     val srcVertex: Long,

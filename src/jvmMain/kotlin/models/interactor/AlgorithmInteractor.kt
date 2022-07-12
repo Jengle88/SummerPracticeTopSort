@@ -1,6 +1,6 @@
 package models.interactor
 
-interface TableInfoInteractor {
+interface AlgorithmInteractor {
     fun doTopSortAlgorithm()
 }
 

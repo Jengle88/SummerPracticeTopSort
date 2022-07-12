@@ -23,11 +23,12 @@ fun MainScreen() {
     MaterialTheme{
         val mainScreenViewModel = remember { mutableStateOf(MainScreenViewModel()) }
         val enterFileNameState = remember { mutableStateOf(false) }
+        val errorFileDialog = remember { mutableStateOf(false) }
         Scaffold(
             topBar = {
                 MainScreenTopBar(
                     onClickLoadGraphButton = {
-                        mainScreenViewModel.value.prepareAlertDialogForLoadData(enterFileNameState)
+                        mainScreenViewModel.value.prepareAlertDialogForLoadData(enterFileNameState, errorFileDialog)
                         mainScreenViewModel.value.showEnterFileDialog(enterFileNameState)
                     },
                     onClickSaveGraphButton = {
@@ -39,6 +40,9 @@ fun MainScreen() {
         ) {
             if (enterFileNameState.value) {
                 mainScreenViewModel.value.EnterFileNameAlertDialogFactory()
+            }
+            if (errorFileDialog.value) {
+                mainScreenViewModel.value.ErrorFileDialog { errorFileDialog.value = false }
             }
             MainContent(mainScreenViewModel.value)
         }
