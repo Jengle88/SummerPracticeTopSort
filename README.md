@@ -60,6 +60,14 @@ java -jar SummerPracticeTopSort-1.0-SNAPSHOT-all.jar
 ./gradlew run
 ```
 
+### Тестирование
+**Запуск тестов:**
+```bash
+ ./gradlew clean test
+```
+Результаты проверки будут загружены в директорию  
+SummerPracticeTopSort/build/test-results/jvmTest/
+
 ### В работе использовалось:
 Kotlin: 1.6.10  
 Jetpack Compose: 1.1.0  
