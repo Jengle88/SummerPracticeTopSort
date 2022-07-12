@@ -1,13 +1,18 @@
 package ui.MainScreen
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import data.graphData.DataGraphLocator
-import utils.GraphToolsState
 import kotlinx.coroutines.flow.MutableStateFlow
+import utils.GraphToolsState
 import utils.algorithm.Algorithm
 import utils.algorithm.AlgorithmState
 
@@ -22,6 +27,29 @@ class MainScreenViewModel {
     private var confirmButtonAction: @Composable (String) -> Unit = {}
     private var dismissButtonAction: @Composable () -> Unit = {}
     private var onDismissAction: () -> Unit = {}
+
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    fun ErrorFileDialog(
+        onDismissAction: () -> Unit
+    ) {
+        AlertDialog(
+            modifier = Modifier
+                .size(width = 350.dp, height = 50.dp),
+            onDismissRequest = onDismissAction,
+            text = {
+                Text(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    text = "Недопустимый формат данных",
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+            },
+            buttons = {}
+        )
+    }
+
 
     @OptIn(ExperimentalMaterialApi::class)
     @Composable
@@ -61,13 +89,17 @@ class MainScreenViewModel {
         )
     }
 
-    fun prepareAlertDialogForLoadData(enterFileNameState: MutableState<Boolean>) {
+    fun prepareAlertDialogForLoadData(
+        enterFileNameState: MutableState<Boolean>,
+        errorFileDialog: MutableState<Boolean>
+    ) {
         alertDialogTitle = "Введите имя файла для загрузки"
         alertDialogLabel = "Имя файла (без расширения)"
         confirmButtonAction = { nameFile ->
             Button(
                 onClick = {
-                    DataGraphLocator.readGraphData("$nameFile.json")
+                    if(!DataGraphLocator.readGraphData("$nameFile.json"))
+                        errorFileDialog.value = true
                     enterFileNameState.value = false
                 }
             ) {
