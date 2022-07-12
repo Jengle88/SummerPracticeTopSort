@@ -108,6 +108,8 @@ object AlgorithmVisualiser {
     }
 
     private fun updateAlgorithmVisualiserState() {
+        if ((algorithmProtocol?.getListActions()?.size ?: 0) <= algorithmProtocolPosition)
+            return
         actionsTableData.value = algorithmProtocol?.getListActions(0..algorithmProtocolPosition) ?: listOf()
         graphCanvasData.value = listOfCanvasVisualise[algorithmProtocolPosition] ?: mapOf()
     }
