@@ -20,10 +20,17 @@ internal class ParserTest {
     }
 
     @Test
-    fun errorLoadTest() {
+    fun errorLoadTest1() {
         val filePath = "./src/jvmTest/kotlin/parsing/loadTests/errorLoad.json"
-        val expected: Graph = Graph(arrayListOf())
-        assertEquals(expected, Parser.readDataJSON(filePath))
+        val expected = Exception()
+        assertThrows(expected.javaClass) { Parser.readDataJSON(filePath) }
+    }
+
+    @Test
+    fun errorLoadTest2() {
+        val filePath = "./src/jvmTest/kotlin/parsing/loadTests/errorLoad2.json"
+        val expected = Exception()
+        assertThrows(expected.javaClass) { Parser.readDataJSON(filePath) }
     }
 
     @Test
