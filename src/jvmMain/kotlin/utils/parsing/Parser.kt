@@ -10,6 +10,13 @@ import utils.getDistTo
 import java.io.File
 
 object Parser {
+    fun writeDataJSON(filePath: String, graph: Graph){
+        val gson = Gson()
+        val text = gson.toJson(graph)
+        val file = File(filePath)
+        file.writeText(text)
+    }
+
     fun readDataJSON(filePath: String): Graph {
         val builder = GsonBuilder()
         val gson = builder.create()
@@ -21,13 +28,6 @@ object Parser {
         }
         if (!checkGraphForValid(graph)) return Graph(arrayListOf())
         return graph
-    }
-
-    fun writeDataJSON(filePath: String, graph: Graph){
-        val gson = Gson()
-        val text = gson.toJson(graph)
-        val file = File(filePath)
-        file.writeText(text)
     }
 
     fun checkGraphForValid(graph: Graph) : Boolean {
