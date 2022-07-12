@@ -2,6 +2,7 @@ package utils
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
+import models.mapper.toOffset
 import org.jetbrains.skia.Font
 import org.jetbrains.skia.Point
 import ui.GraphEditor.GraphCanvas.VertexVO
